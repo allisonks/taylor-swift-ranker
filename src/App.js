@@ -14,29 +14,42 @@ class SupabaseClient {
     this.authToken = null;
   }
 
-  async request(endpoint, options = {}) {
-    const headers = {
-      'apikey': this.key,
-      'Content-Type': 'application/json',
-      ...options.headers
-    };
+async request(endpoint, options = {}) {
+  const headers = {
+    'apikey': this.key,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation',
+    ...options.headers
+  };
 
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
-    }
-
-    const response = await fetch(`${this.url}${endpoint}`, {
-      ...options,
-      headers
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Request failed');
-    }
-
-    return response.json();
+  if (this.authToken) {
+    headers['Authorization'] = `Bearer ${this.authToken}`;
   }
+
+  const response = await fetch(`${this.url}${endpoint}`, {
+    ...options,
+    headers
+  });
+
+  const text = await response.text();
+  
+  if (!response.ok) {
+    console.error('Response status:', response.status);
+    console.error('Response text:', text);
+    throw new Error(text || 'Request failed');
+  }
+
+  if (!text) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error('Failed to parse JSON:', text);
+    throw new Error('Invalid JSON response');
+  }
+}
 
   async signUp(email, password) {
     const data = await this.request('/auth/v1/signup', {
