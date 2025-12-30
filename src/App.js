@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
@@ -107,21 +107,19 @@ class SupabaseClient {
   }
 
   async getRankings(albumId) {
-    return this.request(`/rest/v1/rankings?album_id=eq.${albumId}&select=*`);
+    const userId = this.getUserId();
+    return this.request(`/rest/v1/rankings?album_id=eq.${albumId}&user_id=eq.${userId}&select=*`);
   }
 
-  async saveRanking(albumId, rankedSongs) {
+  async saveRanking(albumId, rankedSongs, rankingName, rankingId = null) {
     const userId = this.getUserId();
     
-    const existing = await this.request(
-      `/rest/v1/rankings?user_id=eq.${userId}&album_id=eq.${albumId}&select=id`
-    );
-
-    if (existing.length > 0) {
-      return this.request(`/rest/v1/rankings?id=eq.${existing[0].id}`, {
+    if (rankingId) {
+      return this.request(`/rest/v1/rankings?id=eq.${rankingId}`, {
         method: 'PATCH',
         body: JSON.stringify({ 
           ranked_songs: rankedSongs,
+          ranking_name: rankingName,
           updated_at: new Date().toISOString()
         })
       });
@@ -131,10 +129,17 @@ class SupabaseClient {
         body: JSON.stringify({
           user_id: userId,
           album_id: albumId,
-          ranked_songs: rankedSongs
+          ranked_songs: rankedSongs,
+          ranking_name: rankingName
         })
       });
     }
+  }
+
+  async deleteRanking(rankingId) {
+    return this.request(`/rest/v1/rankings?id=eq.${rankingId}`, {
+      method: 'DELETE'
+    });
   }
 
   getUserId() {
@@ -165,6 +170,10 @@ const TaylorSwiftRanker = () => {
   const [currentTheme, setCurrentTheme] = useState('torturedPoets');
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [albumImage, setAlbumImage] = useState(null);
+  const [rankingName, setRankingName] = useState('');
+  const [currentRankingId, setCurrentRankingId] = useState(null);
+  const [savedRankings, setSavedRankings] = useState([]);
+  const [showRankingsList, setShowRankingsList] = useState(false);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -178,6 +187,15 @@ const TaylorSwiftRanker = () => {
       setAlbums(data);
     } catch (error) {
       console.error('Error loading albums:', error);
+    }
+  };
+
+  const loadRankings = async (albumId) => {
+    try {
+      const data = await supabase.getRankings(albumId);
+      setSavedRankings(data);
+    } catch (error) {
+      console.error('Error loading rankings:', error);
     }
   };
 
@@ -211,8 +229,9 @@ const TaylorSwiftRanker = () => {
     setSelectedAlbum(album);
     setSongs(album.songs);
     setAlbumImage(null);
+    setRankingName('');
+    setCurrentRankingId(null);
     
-    // Auto-select theme based on album name
     const albumName = album.name.toLowerCase();
     if (albumName.includes('midnights')) {
       setCurrentTheme('midnights');
@@ -232,26 +251,58 @@ const TaylorSwiftRanker = () => {
       setCurrentTheme('torturedPoets');
     }
     
-    try {
-      const rankings = await supabase.getRankings(album.id);
-      const myRanking = rankings.find(r => r.user_id === supabase.getUserId());
-      if (myRanking) {
-        setSongs(myRanking.ranked_songs);
-      }
-    } catch (error) {
-      console.error('Error loading ranking:', error);
-    }
-    
+    await loadRankings(album.id);
     setView('ranking');
   };
 
+  const loadSavedRanking = (ranking) => {
+    setSongs(ranking.ranked_songs);
+    setRankingName(ranking.ranking_name || '');
+    setCurrentRankingId(ranking.id);
+    setShowRankingsList(false);
+    setMessage('Ranking loaded!');
+    setTimeout(() => setMessage(''), 2000);
+  };
+
+  const createNewRanking = () => {
+    setSongs(selectedAlbum.songs);
+    setRankingName('');
+    setCurrentRankingId(null);
+    setShowRankingsList(false);
+    setMessage('Starting new ranking!');
+    setTimeout(() => setMessage(''), 2000);
+  };
+
   const saveRanking = async () => {
+    if (!rankingName.trim()) {
+      setMessage('Please enter a name for your ranking!');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
     try {
-      await supabase.saveRanking(selectedAlbum.id, songs);
+      await supabase.saveRanking(selectedAlbum.id, songs, rankingName, currentRankingId);
       setMessage('Ranking saved!');
+      await loadRankings(selectedAlbum.id);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving ranking: ' + error.message);
+    }
+  };
+
+  const deleteRanking = async (rankingId) => {
+    if (!confirm('Are you sure you want to delete this ranking?')) return;
+    
+    try {
+      await supabase.deleteRanking(rankingId);
+      setMessage('Ranking deleted!');
+      await loadRankings(selectedAlbum.id);
+      if (currentRankingId === rankingId) {
+        createNewRanking();
+      }
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      setMessage('Error deleting ranking: ' + error.message);
     }
   };
 
@@ -282,9 +333,10 @@ const TaylorSwiftRanker = () => {
     e.preventDefault();
     setDraggedItem(null);
   };
+
   const handleDragEnd = () => {
-  setDraggedItem(null);
-};
+    setDraggedItem(null);
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -305,7 +357,7 @@ const TaylorSwiftRanker = () => {
     });
     
     const link = document.createElement('a');
-    link.download = `${selectedAlbum.name}-ranking.png`;
+    link.download = `${selectedAlbum.name}-${rankingName || 'ranking'}.png`;
     link.href = canvas.toDataURL();
     link.click();
   };
@@ -380,41 +432,40 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
 
-  <div className="grid gap-4">
-  {albums.map((album) => {
-    // Determine theme for this album
-    const albumName = album.name.toLowerCase();
-    let albumTheme = 'torturedPoets';
-    
-    if (albumName.includes('midnights')) {
-      albumTheme = 'midnights';
-    } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
-      albumTheme = 'folklore';
-    } else if (albumName.includes('lover')) {
-      albumTheme = 'lover';
-    } else if (albumName.includes('reputation')) {
-      albumTheme = 'reputation';
-    } else if (albumName.includes('red')) {
-      albumTheme = 'red';
-    } else if (albumName.includes('1989')) {
-      albumTheme = 'nineteen89';
-    }
-    
-    const albumThemeColors = COLOR_THEMES[albumTheme];
-    
-    return (
-      <div
-        key={album.id}
-        onClick={() => selectAlbum(album)}
-        className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
-      >
-        <h2 className="text-2xl font-bold text-white">{album.name}</h2>
-        <p className="text-white text-opacity-80">{album.artist}</p>
-        <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
-      </div>
-    );
-  })}
-</div>
+          <div className="grid gap-4">
+            {albums.map((album) => {
+              const albumName = album.name.toLowerCase();
+              let albumTheme = 'torturedPoets';
+              
+              if (albumName.includes('midnights')) {
+                albumTheme = 'midnights';
+              } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+                albumTheme = 'folklore';
+              } else if (albumName.includes('lover')) {
+                albumTheme = 'lover';
+              } else if (albumName.includes('reputation')) {
+                albumTheme = 'reputation';
+              } else if (albumName.includes('red')) {
+                albumTheme = 'red';
+              } else if (albumName.includes('1989')) {
+                albumTheme = 'nineteen89';
+              }
+              
+              const albumThemeColors = COLOR_THEMES[albumTheme];
+              
+              return (
+                <div
+                  key={album.id}
+                  onClick={() => selectAlbum(album)}
+                  className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
+                >
+                  <h2 className="text-2xl font-bold text-white">{album.name}</h2>
+                  <p className="text-white text-opacity-80">{album.artist}</p>
+                  <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -431,7 +482,7 @@ const TaylorSwiftRanker = () => {
               </div>
             )}
             <h1 className="text-4xl font-bold text-white text-center mb-2">
-              My Ranking
+              {rankingName || 'My Ranking'}
             </h1>
             <h2 className="text-xl text-purple-200 text-center mb-8">
               {selectedAlbum.name}
@@ -488,6 +539,14 @@ const TaylorSwiftRanker = () => {
           </button>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setShowRankingsList(!showRankingsList)}
+              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              title="My rankings"
+            >
+              <List size={20} />
+              <span className="text-sm">{savedRankings.length}</span>
+            </button>
+            <button
               onClick={() => setShowThemeSelector(!showThemeSelector)}
               className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
               title="Change color theme"
@@ -517,6 +576,47 @@ const TaylorSwiftRanker = () => {
           accept="image/*"
           className="hidden"
         />
+
+        {showRankingsList && (
+          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-white font-semibold">My Rankings</h3>
+              <button
+                onClick={createNewRanking}
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm transition"
+              >
+                <Plus size={16} />
+                New
+              </button>
+            </div>
+            {savedRankings.length === 0 ? (
+              <p className="text-purple-200 text-sm">No saved rankings yet. Create your first one!</p>
+            ) : (
+              <div className="space-y-2">
+                {savedRankings.map((ranking) => (
+                  <div
+                    key={ranking.id}
+                    className="bg-white bg-opacity-10 rounded-lg p-3 flex justify-between items-center"
+                  >
+                    <button
+                      onClick={() => loadSavedRanking(ranking)}
+                      className="text-white hover:text-purple-200 text-left flex-1"
+                    >
+                      {ranking.ranking_name || 'Untitled Ranking'}
+                    </button>
+                    <button
+                      onClick={() => deleteRanking(ranking.id)}
+                      className="text-red-300 hover:text-red-500 ml-2"
+                      title="Delete ranking"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {showThemeSelector && (
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
@@ -549,10 +649,19 @@ const TaylorSwiftRanker = () => {
           <h1 className="text-5xl font-bold text-white mb-2">
             Rank Your Favorites
           </h1>
-          <h2 className="text-2xl text-purple-200">
+          <h2 className="text-2xl text-purple-200 mb-4">
             {selectedAlbum.name}
           </h2>
-          <p className="text-purple-300 mt-4">
+          
+          <input
+            type="text"
+            placeholder="Name your ranking (e.g., 'My Top Picks' or 'Sad Songs Only')"
+            value={rankingName}
+            onChange={(e) => setRankingName(e.target.value)}
+            className="w-full max-w-md mx-auto px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+          />
+          
+          <p className="text-purple-300 mt-4 text-sm">
             Drag and drop to reorder the songs
           </p>
         </div>
@@ -591,8 +700,9 @@ const TaylorSwiftRanker = () => {
         <div className="flex gap-4">
           <button
             onClick={saveRanking}
-            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-xl font-bold text-lg transition"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition"
           >
+            <Save size={24} />
             Save Ranking
           </button>
           <button
