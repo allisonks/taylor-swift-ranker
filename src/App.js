@@ -21,7 +21,7 @@ const COLOR_THEMES = {
   evermore: {
     name: 'Evermore',
     bgGradient: 'bg-gradient-to-br from-amber-700 via-stone-400 to-yellow-700'
-  }
+  },
   lover: {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400'
