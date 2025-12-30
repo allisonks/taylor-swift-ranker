@@ -10,13 +10,13 @@ const COLOR_THEMES = {
     name: 'Tortured Poets',
     bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200',
     textPrimary: 'text-black',
-    textSecondary: 'text-yellow-950'
+    textSecondary: 'text-yellow-900'
   },
   midnights: {
     name: 'Midnights',
-    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-950',
+    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-850 to-sky-950',
     textPrimary: 'text-white',
-    textSecondary: 'text-purple-50'
+    textSecondary: 'text-purple-100'
   },
   folklore: {
     name: 'Folklore',
@@ -34,7 +34,7 @@ const COLOR_THEMES = {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-orange-500'
+    textSecondary: 'text-orange-100'
   },
   reputation: {
     name: 'Reputation',
