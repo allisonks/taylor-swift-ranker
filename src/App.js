@@ -8,23 +8,27 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const COLOR_THEMES = {
   torturedPoets: {
     name: 'Tortured Poets',
-    bgGradient: 'bg-gradient-to-br from-purple-900 via-pink-800 to-rose-900'
+    bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200'
   },
   midnights: {
     name: 'Midnights',
-    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-purple-900'
+    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-950'
   },
   folklore: {
     name: 'Folklore',
-    bgGradient: 'bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800'
+    bgGradient: 'bg-gradient-to-br from-stone-600 via-gray-300 to-slate-600'
   },
+  evermore: {
+    name: 'Evermore',
+    bgGradient: 'bg-gradient-to-br from-amber-700 via-stone-400 to-yellow-700'
+  }
   lover: {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400'
   },
   reputation: {
     name: 'Reputation',
-    bgGradient: 'bg-gradient-to-br from-black via-gray-900 to-green-950'
+    bgGradient: 'bg-gradient-to-br from-slate-850 via-black to-green-950'
   },
   red: {
     name: 'Red',
@@ -32,7 +36,11 @@ const COLOR_THEMES = {
   },
   nineteen89: {
     name: '1989',
-    bgGradient: 'bg-gradient-to-br from-sky-400 via-blue-300 to-indigo-400'
+    bgGradient: 'bg-gradient-to-br from-sky-400 via-blue-300 to-orange-50'
+  },
+  showgirl: {
+    name: 'Showgirl',
+    bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600'
   }
 };
 
@@ -247,8 +255,10 @@ const TaylorSwiftRanker = () => {
     const albumName = album.name.toLowerCase();
     if (albumName.includes('midnights')) {
       setCurrentTheme('midnights');
-    } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+    } else if (albumName.includes('folklore')) {
       setCurrentTheme('folklore');
+    }  else if (albumName.includes('evermore')) {
+      setCurrentTheme('evermore');
     } else if (albumName.includes('lover')) {
       setCurrentTheme('lover');
     } else if (albumName.includes('reputation')) {
@@ -257,6 +267,8 @@ const TaylorSwiftRanker = () => {
       setCurrentTheme('red');
     } else if (albumName.includes('1989')) {
       setCurrentTheme('nineteen89');
+    } else if (albumName.includes('showgirl')) {
+      setCurrentTheme('showgirl');
     } else if (albumName.includes('tortured')) {
       setCurrentTheme('torturedPoets');
     } else {
@@ -454,16 +466,20 @@ const TaylorSwiftRanker = () => {
                   
                   if (albumName.includes('midnights')) {
                     albumTheme = 'midnights';
-                  } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+                  } else if (albumName.includes('folklore')) {
                     albumTheme = 'folklore';
                   } else if (albumName.includes('lover')) {
                     albumTheme = 'lover';
+                  } else if (albumName.includes('evermore')) {
+                    albumTheme = 'evermore';
                   } else if (albumName.includes('reputation')) {
                     albumTheme = 'reputation';
                   } else if (albumName.includes('red')) {
                     albumTheme = 'red';
                   } else if (albumName.includes('1989')) {
                     albumTheme = 'nineteen89';
+                  } else if (albumName.includes('showiglrl')) {
+                    albumTheme = 'showgirl';
                   }
                   
                   const albumThemeColors = COLOR_THEMES[albumTheme];
@@ -501,8 +517,10 @@ const TaylorSwiftRanker = () => {
                     
                     if (albumName.includes('midnights')) {
                       albumTheme = 'midnights';
-                    } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+                    } else if (albumName.includes('folklore')) {
                       albumTheme = 'folklore';
+                    } else if (albumName.includes('evermore')) {
+                      albumTheme = 'evermore'; 
                     } else if (albumName.includes('lover')) {
                       albumTheme = 'lover';
                     } else if (albumName.includes('reputation')) {
@@ -511,6 +529,8 @@ const TaylorSwiftRanker = () => {
                       albumTheme = 'red';
                     } else if (albumName.includes('1989')) {
                       albumTheme = 'nineteen89';
+                    } else if (albumName.includes('Showgirl')) {
+                      albumTheme = 'showgirl';
                     }
                     
                     const albumThemeColors = COLOR_THEMES[albumTheme];
