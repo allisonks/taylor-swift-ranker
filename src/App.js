@@ -59,7 +59,7 @@ const COLOR_THEMES = {
     bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600',
     textPrimary: 'text-white',
     textSecondary: 'text-zinc-200'
-  }
+  },
   debut: {
     name: 'Debut',
     bgGradient: 'bg-gradient-to-br from-cyan-600 via-yellow-300 to-emerald-600',
