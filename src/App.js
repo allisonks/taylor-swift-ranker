@@ -291,7 +291,7 @@ const TaylorSwiftRanker = () => {
   };
 
   const deleteRanking = async (rankingId) => {
-    if (!confirm('Are you sure you want to delete this ranking?')) return;
+    if (!window.confirm('Are you sure you want to delete this ranking?')) return;
     
     try {
       await supabase.deleteRanking(rankingId);
