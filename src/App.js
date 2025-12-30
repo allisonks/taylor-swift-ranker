@@ -529,7 +529,7 @@ const TaylorSwiftRanker = () => {
                       albumTheme = 'red';
                     } else if (albumName.includes('1989')) {
                       albumTheme = 'nineteen89';
-                    } else if (albumName.includes('Showgirl')) {
+                    } else if (albumName.includes('showgirl')) {
                       albumTheme = 'showgirl';
                     }
                     
