@@ -9,8 +9,8 @@ const COLOR_THEMES = {
   torturedPoets: {
     name: 'Tortured Poets',
     bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200',
-    textPrimary: 'text-gray-900',
-    textSecondary: 'text-gray-700'
+    textPrimary: 'text-black',
+    textSecondary: 'text-gray-800'
   },
   midnights: {
     name: 'Midnights',
@@ -199,6 +199,7 @@ const TaylorSwiftRanker = () => {
   const [rankingName, setRankingName] = useState('');
   const [currentRankingId, setCurrentRankingId] = useState(null);
   const [savedRankings, setSavedRankings] = useState([]);
+  const [allRankings, setAllRankings] = useState([]);
   const [showRankingsList, setShowRankingsList] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempRankingName, setTempRankingName] = useState('');
@@ -249,7 +250,7 @@ const TaylorSwiftRanker = () => {
       const userId = supabase.getUserId();
       if (!userId) return;
       const data = await supabase.request(`/rest/v1/rankings?user_id=eq.${userId}&select=*`);
-      setSavedRankings(data);
+      setAllRankings(data);
     } catch (error) {
       console.error('Error loading all rankings:', error);
     }
@@ -348,6 +349,7 @@ const TaylorSwiftRanker = () => {
       await supabase.saveRanking(selectedAlbum.id, songs, rankingName, currentRankingId);
       setMessage('Ranking saved!');
       await loadRankings(selectedAlbum.id);
+      await loadAllRankings();
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Error saving ranking: ' + error.message);
@@ -361,6 +363,7 @@ const TaylorSwiftRanker = () => {
       await supabase.deleteRanking(rankingId);
       setMessage('Ranking deleted!');
       await loadRankings(selectedAlbum.id);
+      await loadAllRankings();
       if (currentRankingId === rankingId) {
         createNewRanking();
       }
@@ -521,14 +524,14 @@ const TaylorSwiftRanker = () => {
 
             <div>
               <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Pick Up Where You Left Off</h2>
-              {savedRankings.length === 0 ? (
+              {allRankings.length === 0 ? (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
                   <p className={`${theme.textSecondary} mb-2`}>No saved rankings yet!</p>
                   <p className={`${theme.textSecondary} text-sm`}>Create your first ranking by selecting an album</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {savedRankings.map((ranking) => {
+                  {allRankings.map((ranking) => {
                     const album = albums.find(a => a.id === ranking.album_id);
                     if (!album) return null;
                     
