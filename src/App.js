@@ -538,9 +538,9 @@ const TaylorSwiftRanker = () => {
                       onClick={() => selectAlbum(album)}
                       className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
                     >
-                      <h3 className="text-2xl font-bold text-white">{album.name}</h3>
-                      <p className="text-white text-opacity-80">{album.artist}</p>
-                      <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
+                      <h3 className={`text-2xl font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
+                      <p className={`${albumThemeColors.textSecondary}`}>{album.artist}</p>
+                      <p className={`${albumThemeColors.textSecondary} text-sm mt-2`}>{album.songs.length} songs</p>
                     </div>
                   );
                 })}
@@ -572,9 +572,9 @@ const TaylorSwiftRanker = () => {
                         }}
                         className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
                       >
-                        <h3 className="text-lg font-bold text-white">{ranking.ranking_name || 'Untitled Ranking'}</h3>
-                        <p className="text-white text-opacity-80 text-sm">{album.name}</p>
-                        <p className="text-white text-opacity-70 text-xs mt-1">
+                         <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>{ranking.ranking_name || 'Untitled Ranking'}</h3>
+                        <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.name}</p>
+                        <p className={`${albumThemeColors.textSecondary} text-xs mt-1`}>
                           Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
                         </p>
                       </div>
