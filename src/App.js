@@ -225,6 +225,8 @@ const TaylorSwiftRanker = () => {
       return 'red';
     } else if (name.includes('1989')) {
       return 'nineteen89';
+    } else if (name.includes('showgirl')) {
+      return 'showgirl';
     } else if (name.includes('tortured')) {
       return 'torturedPoets';
     } else {
@@ -824,28 +826,27 @@ const TaylorSwiftRanker = () => {
             {songs.map((song, index) => (
               <div
                 key={`${song}-${index}`}
-                className="flex items-center gap-2"
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onDragEnd={handleDragEnd}
+                className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
+                  draggedItem === index ? 'opacity-50 scale-95' : ''
+                }`}
               >
-                <div
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onDragEnd={handleDragEnd}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none flex-1 ${
-                    draggedItem === index ? 'opacity-50 scale-95' : ''
-                  }`}
-                >
-                  <GripVertical className={theme.textSecondary} size={24} />
-                  <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
-                    {index + 1}
-                  </div>
-                  <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
+                <GripVertical className={theme.textSecondary} size={24} />
+                <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
+                  {index + 1}
                 </div>
+                <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
                 <button
-                  onClick={() => removeSong(index)}
-                  className="bg-red-500 bg-opacity-80 hover:bg-opacity-100 text-white p-3 rounded-lg transition flex-shrink-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSong(index);
+                  }}
+                  className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
                   title="Remove track"
                 >
                   <X size={20} />
