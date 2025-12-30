@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
@@ -203,6 +203,7 @@ const TaylorSwiftRanker = () => {
   const [showRankingsList, setShowRankingsList] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempRankingName, setTempRankingName] = useState('');
+  const [originalSongs, setOriginalSongs] = useState([]);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -277,6 +278,7 @@ const TaylorSwiftRanker = () => {
         await supabase.signIn(email, password);
       }
       setUser({ email });
+      await loadAlbums();
       setView('albums');
     } catch (error) {
       setMessage(error.message);
@@ -294,6 +296,7 @@ const TaylorSwiftRanker = () => {
   const selectAlbum = async (album) => {
     setSelectedAlbum(album);
     setSongs(album.songs);
+    setOriginalSongs(album.songs);
     setAlbumImage(null);
     setRankingName(`My Favorite ${album.name} Tracks`);
     setCurrentRankingId(null);
@@ -316,11 +319,23 @@ const TaylorSwiftRanker = () => {
 
   const createNewRanking = () => {
     setSongs(selectedAlbum.songs);
+    setOriginalSongs(selectedAlbum.songs);
     setRankingName(`My Favorite ${selectedAlbum.name} Tracks`);
     setCurrentRankingId(null);
     setShowRankingsList(false);
     setIsEditingTitle(false);
     setMessage('Starting new ranking!');
+    setTimeout(() => setMessage(''), 2000);
+  };
+
+  const removeSong = (index) => {
+    const newSongs = songs.filter((_, i) => i !== index);
+    setSongs(newSongs);
+  };
+
+  const resetToOriginal = () => {
+    setSongs(originalSongs);
+    setMessage('Tracklist reset!');
     setTimeout(() => setMessage(''), 2000);
   };
 
@@ -436,7 +451,7 @@ const TaylorSwiftRanker = () => {
       <div className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 p-8 flex items-center justify-center">
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl max-w-md w-full">
           <h1 className="text-4xl font-bold text-white text-center mb-8">
-            Album Ranker
+            TAS Songlist
           </h1>
           
           <form onSubmit={handleAuth} className="space-y-4">
@@ -489,7 +504,7 @@ const TaylorSwiftRanker = () => {
       <div className="min-h-screen bg-gradient-to-br from-red-400 via-yellow-400 through-green-400 via-blue-400 to-purple-500 p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-white">Album Ranker</h1>
+            <h1 className="text-4xl font-bold text-white">TAS Songlist</h1>
             <button
               onClick={handleSignOut}
               className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
@@ -791,25 +806,50 @@ const TaylorSwiftRanker = () => {
         )}
 
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className={`text-lg font-semibold ${theme.textPrimary}`}>
+              {songs.length} of {originalSongs.length} tracks
+            </h3>
+            <button
+              onClick={resetToOriginal}
+              className={`flex items-center gap-2 ${theme.textSecondary} hover:${theme.textPrimary} transition`}
+              title="Reset to original tracklist"
+            >
+              <RotateCcw size={20} />
+              Reset
+            </button>
+          </div>
+          
           <div className="space-y-3">
             {songs.map((song, index) => (
               <div
                 key={`${song}-${index}`}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragEnter={(e) => handleDragEnter(e, index)}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onDragEnd={handleDragEnd}
-                className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
-                  draggedItem === index ? 'opacity-50 scale-95' : ''
-                }`}
+                className="flex items-center gap-2"
               >
-                <GripVertical className={theme.textSecondary} size={24} />
-                <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
-                  {index + 1}
+                <div
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragEnd={handleDragEnd}
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none flex-1 ${
+                    draggedItem === index ? 'opacity-50 scale-95' : ''
+                  }`}
+                >
+                  <GripVertical className={theme.textSecondary} size={24} />
+                  <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
+                    {index + 1}
+                  </div>
+                  <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
                 </div>
-                <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
+                <button
+                  onClick={() => removeSong(index)}
+                  className="bg-red-500 bg-opacity-80 hover:bg-opacity-100 text-white p-3 rounded-lg transition flex-shrink-0"
+                  title="Remove track"
+                >
+                  <X size={20} />
+                </button>
               </div>
             ))}
           </div>
