@@ -185,8 +185,20 @@ const TaylorSwiftRanker = () => {
     try {
       const data = await supabase.getAlbums();
       setAlbums(data);
+      await loadAllRankings();
     } catch (error) {
       console.error('Error loading albums:', error);
+    }
+  };
+
+  const loadAllRankings = async () => {
+    try {
+      const userId = supabase.getUserId();
+      if (!userId) return;
+      const data = await supabase.request(`/rest/v1/rankings?user_id=eq.${userId}&select=*`);
+      setSavedRankings(data);
+    } catch (error) {
+      console.error('Error loading all rankings:', error);
     }
   };
 
@@ -291,7 +303,7 @@ const TaylorSwiftRanker = () => {
   };
 
   const deleteRanking = async (rankingId) => {
-    if (!window.confirm('Are you sure you want to delete this ranking?')) return;
+    if (!confirm('Are you sure you want to delete this ranking?')) return;
     
     try {
       await supabase.deleteRanking(rankingId);
@@ -420,9 +432,9 @@ const TaylorSwiftRanker = () => {
   if (view === 'albums') {
     return (
       <div className={`min-h-screen ${theme.bgGradient} p-8`}>
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-white">Select an Album</h1>
+            <h1 className="text-4xl font-bold text-white">Album Ranker</h1>
             <button
               onClick={handleSignOut}
               className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
@@ -432,39 +444,97 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
 
-          <div className="grid gap-4">
-            {albums.map((album) => {
-              const albumName = album.name.toLowerCase();
-              let albumTheme = 'torturedPoets';
-              
-              if (albumName.includes('midnights')) {
-                albumTheme = 'midnights';
-              } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
-                albumTheme = 'folklore';
-              } else if (albumName.includes('lover')) {
-                albumTheme = 'lover';
-              } else if (albumName.includes('reputation')) {
-                albumTheme = 'reputation';
-              } else if (albumName.includes('red')) {
-                albumTheme = 'red';
-              } else if (albumName.includes('1989')) {
-                albumTheme = 'nineteen89';
-              }
-              
-              const albumThemeColors = COLOR_THEMES[albumTheme];
-              
-              return (
-                <div
-                  key={album.id}
-                  onClick={() => selectAlbum(album)}
-                  className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
-                >
-                  <h2 className="text-2xl font-bold text-white">{album.name}</h2>
-                  <p className="text-white text-opacity-80">{album.artist}</p>
-                  <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
+              <div className="grid gap-4">
+                {albums.map((album) => {
+                  const albumName = album.name.toLowerCase();
+                  let albumTheme = 'torturedPoets';
+                  
+                  if (albumName.includes('midnights')) {
+                    albumTheme = 'midnights';
+                  } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+                    albumTheme = 'folklore';
+                  } else if (albumName.includes('lover')) {
+                    albumTheme = 'lover';
+                  } else if (albumName.includes('reputation')) {
+                    albumTheme = 'reputation';
+                  } else if (albumName.includes('red')) {
+                    albumTheme = 'red';
+                  } else if (albumName.includes('1989')) {
+                    albumTheme = 'nineteen89';
+                  }
+                  
+                  const albumThemeColors = COLOR_THEMES[albumTheme];
+                  
+                  return (
+                    <div
+                      key={album.id}
+                      onClick={() => selectAlbum(album)}
+                      className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
+                    >
+                      <h3 className="text-2xl font-bold text-white">{album.name}</h3>
+                      <p className="text-white text-opacity-80">{album.artist}</p>
+                      <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
+              {savedRankings.length === 0 ? (
+                <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
+                  <p className="text-purple-200 mb-2">No saved rankings yet!</p>
+                  <p className="text-purple-300 text-sm">Create your first ranking by selecting an album</p>
                 </div>
-              );
-            })}
+              ) : (
+                <div className="space-y-3">
+                  {savedRankings.map((ranking) => {
+                    const album = albums.find(a => a.id === ranking.album_id);
+                    if (!album) return null;
+                    
+                    const albumName = album.name.toLowerCase();
+                    let albumTheme = 'torturedPoets';
+                    
+                    if (albumName.includes('midnights')) {
+                      albumTheme = 'midnights';
+                    } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+                      albumTheme = 'folklore';
+                    } else if (albumName.includes('lover')) {
+                      albumTheme = 'lover';
+                    } else if (albumName.includes('reputation')) {
+                      albumTheme = 'reputation';
+                    } else if (albumName.includes('red')) {
+                      albumTheme = 'red';
+                    } else if (albumName.includes('1989')) {
+                      albumTheme = 'nineteen89';
+                    }
+                    
+                    const albumThemeColors = COLOR_THEMES[albumTheme];
+                    
+                    return (
+                      <div
+                        key={ranking.id}
+                        onClick={() => {
+                          selectAlbum(album);
+                          setTimeout(() => loadSavedRanking(ranking), 100);
+                        }}
+                        className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg`}
+                      >
+                        <h3 className="text-lg font-bold text-white">{ranking.ranking_name || 'Untitled Ranking'}</h3>
+                        <p className="text-white text-opacity-80 text-sm">{album.name}</p>
+                        <p className="text-white text-opacity-70 text-xs mt-1">
+                          Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
