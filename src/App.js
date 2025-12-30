@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2 } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
@@ -8,39 +8,57 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const COLOR_THEMES = {
   torturedPoets: {
     name: 'Tortured Poets',
-    bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200'
+    bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200',
+    textPrimary: 'text-gray-900',
+    textSecondary: 'text-gray-700'
   },
   midnights: {
     name: 'Midnights',
-    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-950'
+    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-950',
+    textPrimary: 'text-white',
+    textSecondary: 'text-blue-200'
   },
   folklore: {
     name: 'Folklore',
-    bgGradient: 'bg-gradient-to-br from-stone-600 via-gray-300 to-slate-600'
+    bgGradient: 'bg-gradient-to-br from-stone-600 via-gray-300 to-slate-600',
+    textPrimary: 'text-white',
+    textSecondary: 'text-gray-200'
   },
   evermore: {
     name: 'Evermore',
-    bgGradient: 'bg-gradient-to-br from-amber-700 via-stone-400 to-yellow-700'
+    bgGradient: 'bg-gradient-to-br from-amber-700 via-stone-400 to-yellow-700',
+    textPrimary: 'text-white',
+    textSecondary: 'text-amber-100'
   },
   lover: {
     name: 'Lover',
-    bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400'
+    bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400',
+    textPrimary: 'text-white',
+    textSecondary: 'text-pink-100'
   },
   reputation: {
     name: 'Reputation',
-    bgGradient: 'bg-gradient-to-br from-slate-850 via-black to-green-950'
+    bgGradient: 'bg-gradient-to-br from-slate-900 via-black to-green-950',
+    textPrimary: 'text-white',
+    textSecondary: 'text-gray-300'
   },
   red: {
     name: 'Red',
-    bgGradient: 'bg-gradient-to-br from-red-900 via-orange-800 to-red-950'
+    bgGradient: 'bg-gradient-to-br from-red-900 via-orange-800 to-red-950',
+    textPrimary: 'text-white',
+    textSecondary: 'text-red-200'
   },
   nineteen89: {
     name: '1989',
-    bgGradient: 'bg-gradient-to-br from-sky-400 via-blue-300 to-orange-50'
+    bgGradient: 'bg-gradient-to-br from-sky-400 via-blue-300 to-orange-50',
+    textPrimary: 'text-gray-900',
+    textSecondary: 'text-blue-900'
   },
   showgirl: {
     name: 'Showgirl',
-    bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600'
+    bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600',
+    textPrimary: 'text-white',
+    textSecondary: 'text-emerald-100'
   }
 };
 
@@ -182,6 +200,8 @@ const TaylorSwiftRanker = () => {
   const [currentRankingId, setCurrentRankingId] = useState(null);
   const [savedRankings, setSavedRankings] = useState([]);
   const [showRankingsList, setShowRankingsList] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [tempRankingName, setTempRankingName] = useState('');
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -249,16 +269,17 @@ const TaylorSwiftRanker = () => {
     setSelectedAlbum(album);
     setSongs(album.songs);
     setAlbumImage(null);
-    setRankingName('');
+    setRankingName(`My Favorite ${album.name} Tracks`);
     setCurrentRankingId(null);
+    setIsEditingTitle(false);
     
     const albumName = album.name.toLowerCase();
     if (albumName.includes('midnights')) {
       setCurrentTheme('midnights');
+    } else if (albumName.includes('evermore')) {
+      setCurrentTheme('evermore');
     } else if (albumName.includes('folklore')) {
       setCurrentTheme('folklore');
-    }  else if (albumName.includes('evermore')) {
-      setCurrentTheme('evermore');
     } else if (albumName.includes('lover')) {
       setCurrentTheme('lover');
     } else if (albumName.includes('reputation')) {
@@ -267,8 +288,6 @@ const TaylorSwiftRanker = () => {
       setCurrentTheme('red');
     } else if (albumName.includes('1989')) {
       setCurrentTheme('nineteen89');
-    } else if (albumName.includes('showgirl')) {
-      setCurrentTheme('showgirl');
     } else if (albumName.includes('tortured')) {
       setCurrentTheme('torturedPoets');
     } else {
@@ -290,11 +309,26 @@ const TaylorSwiftRanker = () => {
 
   const createNewRanking = () => {
     setSongs(selectedAlbum.songs);
-    setRankingName('');
+    setRankingName(`My Favorite ${selectedAlbum.name} Tracks`);
     setCurrentRankingId(null);
     setShowRankingsList(false);
+    setIsEditingTitle(false);
     setMessage('Starting new ranking!');
     setTimeout(() => setMessage(''), 2000);
+  };
+
+  const startEditingTitle = () => {
+    setTempRankingName(rankingName);
+    setIsEditingTitle(true);
+  };
+
+  const saveTitle = () => {
+    setRankingName(tempRankingName);
+    setIsEditingTitle(false);
+  };
+
+  const cancelEditTitle = () => {
+    setIsEditingTitle(false);
   };
 
   const saveRanking = async () => {
@@ -315,7 +349,7 @@ const TaylorSwiftRanker = () => {
   };
 
   const deleteRanking = async (rankingId) => {
-    if (!window.confirm('Are you sure you want to delete this ranking?')) return;
+    if (!confirm('Are you sure you want to delete this ranking?')) return;
     
     try {
       await supabase.deleteRanking(rankingId);
@@ -392,7 +426,7 @@ const TaylorSwiftRanker = () => {
     return (
       <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center`}>
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl max-w-md w-full">
-          <h1 className="text-4xl font-bold text-white text-center mb-8">
+          <h1 className={`text-4xl font-bold ${theme.textPrimary} text-center mb-8`}>
             Album Ranker
           </h1>
           
@@ -402,7 +436,7 @@ const TaylorSwiftRanker = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className={`w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 ${theme.textPrimary} placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400`}
               required
             />
             
@@ -411,12 +445,12 @@ const TaylorSwiftRanker = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              className={`w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 ${theme.textPrimary} placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400`}
               required
             />
 
             {message && (
-              <div className="text-white text-center text-sm bg-white bg-opacity-10 p-3 rounded-lg">
+              <div className={`${theme.textPrimary} text-center text-sm bg-white bg-opacity-10 p-3 rounded-lg`}>
                 {message}
               </div>
             )}
@@ -431,7 +465,7 @@ const TaylorSwiftRanker = () => {
             <button
               type="button"
               onClick={() => setIsSignUp(!isSignUp)}
-              className="w-full text-purple-200 hover:text-white text-sm transition"
+              className={`w-full ${theme.textSecondary} hover:${theme.textPrimary} text-sm transition`}
             >
               {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
@@ -446,10 +480,10 @@ const TaylorSwiftRanker = () => {
       <div className={`min-h-screen ${theme.bgGradient} p-8`}>
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-white">Album Ranker</h1>
+            <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>Album Ranker</h1>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
             >
               <LogOut size={20} />
               Sign Out
@@ -458,7 +492,7 @@ const TaylorSwiftRanker = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
+              <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Start a New List</h2>
               <div className="grid gap-4">
                 {albums.map((album) => {
                   const albumName = album.name.toLowerCase();
@@ -466,20 +500,18 @@ const TaylorSwiftRanker = () => {
                   
                   if (albumName.includes('midnights')) {
                     albumTheme = 'midnights';
+                  } else if (albumName.includes('evermore')) {
+                    albumTheme = 'evermore';
                   } else if (albumName.includes('folklore')) {
                     albumTheme = 'folklore';
                   } else if (albumName.includes('lover')) {
                     albumTheme = 'lover';
-                  } else if (albumName.includes('evermore')) {
-                    albumTheme = 'evermore';
                   } else if (albumName.includes('reputation')) {
                     albumTheme = 'reputation';
                   } else if (albumName.includes('red')) {
                     albumTheme = 'red';
                   } else if (albumName.includes('1989')) {
                     albumTheme = 'nineteen89';
-                  } else if (albumName.includes('showiglrl')) {
-                    albumTheme = 'showgirl';
                   }
                   
                   const albumThemeColors = COLOR_THEMES[albumTheme];
@@ -500,11 +532,11 @@ const TaylorSwiftRanker = () => {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
+              <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Pick Up Where You Left Off</h2>
               {savedRankings.length === 0 ? (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
-                  <p className="text-purple-200 mb-2">No saved rankings yet!</p>
-                  <p className="text-purple-300 text-sm">Create your first ranking by selecting an album</p>
+                  <p className={`${theme.textSecondary} mb-2`}>No saved rankings yet!</p>
+                  <p className={`${theme.textSecondary} text-sm`}>Create your first ranking by selecting an album</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -517,10 +549,10 @@ const TaylorSwiftRanker = () => {
                     
                     if (albumName.includes('midnights')) {
                       albumTheme = 'midnights';
+                    } else if (albumName.includes('evermore')) {
+                      albumTheme = 'evermore';
                     } else if (albumName.includes('folklore')) {
                       albumTheme = 'folklore';
-                    } else if (albumName.includes('evermore')) {
-                      albumTheme = 'evermore'; 
                     } else if (albumName.includes('lover')) {
                       albumTheme = 'lover';
                     } else if (albumName.includes('reputation')) {
@@ -529,8 +561,6 @@ const TaylorSwiftRanker = () => {
                       albumTheme = 'red';
                     } else if (albumName.includes('1989')) {
                       albumTheme = 'nineteen89';
-                    } else if (albumName.includes('showgirl')) {
-                      albumTheme = 'showgirl';
                     }
                     
                     const albumThemeColors = COLOR_THEMES[albumTheme];
@@ -623,14 +653,14 @@ const TaylorSwiftRanker = () => {
         <div className="flex justify-between items-center mb-8">
           <button
             onClick={() => setView('albums')}
-            className="text-purple-200 hover:text-white flex items-center gap-2 transition"
+            className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition`}
           >
             ← Back to Albums
           </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowRankingsList(!showRankingsList)}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
               <List size={20} />
@@ -638,21 +668,21 @@ const TaylorSwiftRanker = () => {
             </button>
             <button
               onClick={() => setShowThemeSelector(!showThemeSelector)}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="Change color theme"
             >
               <Palette size={20} />
             </button>
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="Upload album image"
             >
               <ImageIcon size={20} />
             </button>
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
             >
               <LogOut size={20} />
             </button>
@@ -670,7 +700,7 @@ const TaylorSwiftRanker = () => {
         {showRankingsList && (
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-white font-semibold">My Rankings</h3>
+              <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
               <button
                 onClick={createNewRanking}
                 className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm transition"
@@ -680,7 +710,7 @@ const TaylorSwiftRanker = () => {
               </button>
             </div>
             {savedRankings.length === 0 ? (
-              <p className="text-purple-200 text-sm">No saved rankings yet. Create your first one!</p>
+              <p className={`${theme.textSecondary} text-sm`}>No saved rankings yet. Create your first one!</p>
             ) : (
               <div className="space-y-2">
                 {savedRankings.map((ranking) => (
@@ -690,7 +720,7 @@ const TaylorSwiftRanker = () => {
                   >
                     <button
                       onClick={() => loadSavedRanking(ranking)}
-                      className="text-white hover:text-purple-200 text-left flex-1"
+                      className={`${theme.textPrimary} hover:${theme.textSecondary} text-left flex-1`}
                     >
                       {ranking.ranking_name || 'Untitled Ranking'}
                     </button>
@@ -710,7 +740,7 @@ const TaylorSwiftRanker = () => {
 
         {showThemeSelector && (
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
-            <h3 className="text-white font-semibold mb-3">Choose Color Theme</h3>
+            <h3 className={`${theme.textPrimary} font-semibold mb-3`}>Choose Color Theme</h3>
             <div className="grid grid-cols-3 gap-2">
               {Object.entries(COLOR_THEMES).map(([key, t]) => (
                 <button
@@ -723,7 +753,7 @@ const TaylorSwiftRanker = () => {
                     currentTheme === key ? 'ring-4 ring-white' : ''
                   }`}
                 >
-                  <div className="text-white text-sm font-semibold">{t.name}</div>
+                  <div className={`${t.textPrimary} text-sm font-semibold`}>{t.name}</div>
                 </button>
               ))}
             </div>
@@ -736,28 +766,53 @@ const TaylorSwiftRanker = () => {
               <img src={albumImage} alt="Album" className="w-24 h-24 rounded-lg object-cover shadow-lg" />
             </div>
           )}
-          <h1 className="text-5xl font-bold text-white mb-2">
-            Rank Your Favorites
-          </h1>
-          <h2 className="text-2xl text-purple-200 mb-4">
-            {selectedAlbum.name}
-          </h2>
           
-          <input
-            type="text"
-            placeholder="Name your ranking (e.g., 'My Top Picks' or 'Sad Songs Only')"
-            value={rankingName}
-            onChange={(e) => setRankingName(e.target.value)}
-            className="w-full max-w-md mx-auto px-4 py-2 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
-          />
+          {isEditingTitle ? (
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <input
+                type="text"
+                value={tempRankingName}
+                onChange={(e) => setTempRankingName(e.target.value)}
+                className={`text-3xl font-bold ${theme.textPrimary} bg-white bg-opacity-20 px-4 py-2 rounded-lg border-2 border-pink-400 focus:outline-none text-center`}
+                autoFocus
+              />
+              <button
+                onClick={saveTitle}
+                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
+                title="Save title"
+              >
+                <Check size={20} />
+              </button>
+              <button
+                onClick={cancelEditTitle}
+                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition"
+                title="Cancel"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>
+                {rankingName}
+              </h1>
+              <button
+                onClick={startEditingTitle}
+                className={`${theme.textSecondary} hover:${theme.textPrimary} transition`}
+                title="Edit title"
+              >
+                <Edit2 size={24} />
+              </button>
+            </div>
+          )}
           
-          <p className="text-purple-300 mt-4 text-sm">
+          <p className={`${theme.textSecondary} text-sm`}>
             Drag and drop to reorder the songs
           </p>
         </div>
 
         {message && (
-          <div className="mb-4 text-white text-center bg-green-500 bg-opacity-20 p-3 rounded-lg">
+          <div className={`mb-4 ${theme.textPrimary} text-center bg-green-500 bg-opacity-20 p-3 rounded-lg`}>
             {message}
           </div>
         )}
@@ -777,11 +832,11 @@ const TaylorSwiftRanker = () => {
                   draggedItem === index ? 'opacity-50 scale-95' : ''
                 }`}
               >
-                <GripVertical className="text-purple-200 flex-shrink-0" size={24} />
-                <div className="text-2xl font-bold text-white w-12 text-center flex-shrink-0">
+                <GripVertical className={theme.textSecondary} size={24} />
+                <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
                   {index + 1}
                 </div>
-                <div className="text-lg text-white flex-1">{song}</div>
+                <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
               </div>
             ))}
           </div>
