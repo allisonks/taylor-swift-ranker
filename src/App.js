@@ -282,6 +282,9 @@ const TaylorSwiftRanker = () => {
     e.preventDefault();
     setDraggedItem(null);
   };
+  const handleDragEnd = () => {
+  setDraggedItem(null);
+};
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -377,19 +380,41 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
 
-          <div className="grid gap-4">
-            {albums.map((album) => (
-              <div
-                key={album.id}
-                onClick={() => selectAlbum(album)}
-                className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 hover:bg-opacity-20 cursor-pointer transition"
-              >
-                <h2 className="text-2xl font-bold text-white">{album.name}</h2>
-                <p className="text-purple-200">{album.artist}</p>
-                <p className="text-purple-300 text-sm mt-2">{album.songs.length} songs</p>
-              </div>
-            ))}
-          </div>
+  <div className="grid gap-4">
+  {albums.map((album) => {
+    // Determine theme for this album
+    const albumName = album.name.toLowerCase();
+    let albumTheme = 'torturedPoets';
+    
+    if (albumName.includes('midnights')) {
+      albumTheme = 'midnights';
+    } else if (albumName.includes('folklore') || albumName.includes('evermore')) {
+      albumTheme = 'folklore';
+    } else if (albumName.includes('lover')) {
+      albumTheme = 'lover';
+    } else if (albumName.includes('reputation')) {
+      albumTheme = 'reputation';
+    } else if (albumName.includes('red')) {
+      albumTheme = 'red';
+    } else if (albumName.includes('1989')) {
+      albumTheme = 'nineteen89';
+    }
+    
+    const albumThemeColors = COLOR_THEMES[albumTheme];
+    
+    return (
+      <div
+        key={album.id}
+        onClick={() => selectAlbum(album)}
+        className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
+      >
+        <h2 className="text-2xl font-bold text-white">{album.name}</h2>
+        <p className="text-white text-opacity-80">{album.artist}</p>
+        <p className="text-white text-opacity-70 text-sm mt-2">{album.songs.length} songs</p>
+      </div>
+    );
+  })}
+</div>
         </div>
       </div>
     );
@@ -548,6 +573,7 @@ const TaylorSwiftRanker = () => {
                 onDragEnter={(e) => handleDragEnter(e, index)}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
+                onDragEnd={handleDragEnd}
                 className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
                   draggedItem === index ? 'opacity-50 scale-95' : ''
                 }`}
