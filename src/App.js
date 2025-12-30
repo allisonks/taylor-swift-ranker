@@ -205,6 +205,31 @@ const TaylorSwiftRanker = () => {
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  const getUserId = supabase.getUserId.bind(supabase);
+
+  const getAlbumTheme = (albumName) => {
+    const name = albumName.toLowerCase();
+    if (name.includes('midnights')) {
+      return 'midnights';
+    } else if (name.includes('evermore')) {
+      return 'evermore';
+    } else if (name.includes('folklore')) {
+      return 'folklore';
+    } else if (name.includes('lover')) {
+      return 'lover';
+    } else if (name.includes('reputation')) {
+      return 'reputation';
+    } else if (name.includes('red')) {
+      return 'red';
+    } else if (name.includes('1989')) {
+      return 'nineteen89';
+    } else if (name.includes('tortured')) {
+      return 'torturedPoets';
+    } else {
+      return 'torturedPoets';
+    }
+  };
+
   useEffect(() => {
     loadAlbums();
   }, []);
@@ -273,26 +298,7 @@ const TaylorSwiftRanker = () => {
     setCurrentRankingId(null);
     setIsEditingTitle(false);
     
-    const albumName = album.name.toLowerCase();
-    if (albumName.includes('midnights')) {
-      setCurrentTheme('midnights');
-    } else if (albumName.includes('evermore')) {
-      setCurrentTheme('evermore');
-    } else if (albumName.includes('folklore')) {
-      setCurrentTheme('folklore');
-    } else if (albumName.includes('lover')) {
-      setCurrentTheme('lover');
-    } else if (albumName.includes('reputation')) {
-      setCurrentTheme('reputation');
-    } else if (albumName.includes('red')) {
-      setCurrentTheme('red');
-    } else if (albumName.includes('1989')) {
-      setCurrentTheme('nineteen89');
-    } else if (albumName.includes('tortured')) {
-      setCurrentTheme('torturedPoets');
-    } else {
-      setCurrentTheme('torturedPoets');
-    }
+    setCurrentTheme(getAlbumTheme(album.name));
     
     await loadRankings(album.id);
     setView('ranking');
@@ -349,7 +355,7 @@ const TaylorSwiftRanker = () => {
   };
 
   const deleteRanking = async (rankingId) => {
-    if (!window.confirm('Are you sure you want to delete this ranking?')) return;
+    if (!confirm('Are you sure you want to delete this ranking?')) return;
     
     try {
       await supabase.deleteRanking(rankingId);
@@ -495,25 +501,7 @@ const TaylorSwiftRanker = () => {
               <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Start a New List</h2>
               <div className="grid gap-4">
                 {albums.map((album) => {
-                  const albumName = album.name.toLowerCase();
-                  let albumTheme = 'torturedPoets';
-                  
-                  if (albumName.includes('midnights')) {
-                    albumTheme = 'midnights';
-                  } else if (albumName.includes('evermore')) {
-                    albumTheme = 'evermore';
-                  } else if (albumName.includes('folklore')) {
-                    albumTheme = 'folklore';
-                  } else if (albumName.includes('lover')) {
-                    albumTheme = 'lover';
-                  } else if (albumName.includes('reputation')) {
-                    albumTheme = 'reputation';
-                  } else if (albumName.includes('red')) {
-                    albumTheme = 'red';
-                  } else if (albumName.includes('1989')) {
-                    albumTheme = 'nineteen89';
-                  }
-                  
+                  const albumTheme = getAlbumTheme(album.name);
                   const albumThemeColors = COLOR_THEMES[albumTheme];
                   
                   return (
@@ -544,25 +532,7 @@ const TaylorSwiftRanker = () => {
                     const album = albums.find(a => a.id === ranking.album_id);
                     if (!album) return null;
                     
-                    const albumName = album.name.toLowerCase();
-                    let albumTheme = 'torturedPoets';
-                    
-                    if (albumName.includes('midnights')) {
-                      albumTheme = 'midnights';
-                    } else if (albumName.includes('evermore')) {
-                      albumTheme = 'evermore';
-                    } else if (albumName.includes('folklore')) {
-                      albumTheme = 'folklore';
-                    } else if (albumName.includes('lover')) {
-                      albumTheme = 'lover';
-                    } else if (albumName.includes('reputation')) {
-                      albumTheme = 'reputation';
-                    } else if (albumName.includes('red')) {
-                      albumTheme = 'red';
-                    } else if (albumName.includes('1989')) {
-                      albumTheme = 'nineteen89';
-                    }
-                    
+                    const albumTheme = getAlbumTheme(album.name);
                     const albumThemeColors = COLOR_THEMES[albumTheme];
                     
                     return (
