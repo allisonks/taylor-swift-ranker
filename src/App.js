@@ -511,7 +511,7 @@ const TaylorSwiftRanker = () => {
                     <div
                       key={album.id}
                       onClick={() => selectAlbum(album)}
-                      className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg`}
+                      className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
                     >
                       <h3 className="text-2xl font-bold text-white">{album.name}</h3>
                       <p className="text-white text-opacity-80">{album.artist}</p>
@@ -545,7 +545,7 @@ const TaylorSwiftRanker = () => {
                           selectAlbum(album);
                           setTimeout(() => loadSavedRanking(ranking), 100);
                         }}
-                        className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg`}
+                        className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
                       >
                         <h3 className="text-lg font-bold text-white">{ranking.ranking_name || 'Untitled Ranking'}</h3>
                         <p className="text-white text-opacity-80 text-sm">{album.name}</p>
