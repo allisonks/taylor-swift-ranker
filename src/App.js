@@ -10,19 +10,19 @@ const COLOR_THEMES = {
     name: 'Tortured Poets',
     bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200',
     textPrimary: 'text-black',
-    textSecondary: 'text-gray-800'
+    textSecondary: 'text-yellow-950'
   },
   midnights: {
     name: 'Midnights',
     bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-900 to-sky-950',
     textPrimary: 'text-white',
-    textSecondary: 'text-blue-200'
+    textSecondary: 'text-purple-50'
   },
   folklore: {
     name: 'Folklore',
     bgGradient: 'bg-gradient-to-br from-stone-600 via-gray-300 to-slate-600',
-    textPrimary: 'text-white',
-    textSecondary: 'text-gray-200'
+    textPrimary: 'text-black',
+    textSecondary: 'text-gray-900'
   },
   evermore: {
     name: 'Evermore',
@@ -34,13 +34,13 @@ const COLOR_THEMES = {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-pink-100'
+    textSecondary: 'text-orange-500'
   },
   reputation: {
     name: 'Reputation',
     bgGradient: 'bg-gradient-to-br from-slate-900 via-black to-green-950',
     textPrimary: 'text-white',
-    textSecondary: 'text-gray-300'
+    textSecondary: 'text-red-500'
   },
   red: {
     name: 'Red',
@@ -58,7 +58,13 @@ const COLOR_THEMES = {
     name: 'Showgirl',
     bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600',
     textPrimary: 'text-white',
-    textSecondary: 'text-emerald-100'
+    textSecondary: 'text-zinc-200'
+  }
+  debut: {
+    name: 'Debut',
+    bgGradient: 'bg-gradient-to-br from-cyan-600 via-yellow-300 to-emerald-600',
+    textPrimary: 'text-white',
+    textSecondary: 'text-pink-300'
   }
 };
 
@@ -221,14 +227,16 @@ const TaylorSwiftRanker = () => {
       return 'lover';
     } else if (name.includes('reputation')) {
       return 'reputation';
-    } else if (name.includes('red')) {
-      return 'red';
     } else if (name.includes('1989')) {
       return 'nineteen89';
     } else if (name.includes('showgirl')) {
       return 'showgirl';
+     } else if (name.includes('swift')) {
+      return 'debut';
     } else if (name.includes('tortured')) {
       return 'torturedPoets';
+    } else if (name.includes('red')) {
+      return 'red';
     } else {
       return 'torturedPoets';
     }
