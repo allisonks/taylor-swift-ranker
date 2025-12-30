@@ -433,9 +433,9 @@ const TaylorSwiftRanker = () => {
 
   if (view === 'auth') {
     return (
-      <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center`}>
+      <div className="min-h-screen bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-500 p-8 flex items-center justify-center">
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl max-w-md w-full">
-          <h1 className={`text-4xl font-bold ${theme.textPrimary} text-center mb-8`}>
+          <h1 className="text-4xl font-bold text-white text-center mb-8">
             Album Ranker
           </h1>
           
@@ -445,7 +445,7 @@ const TaylorSwiftRanker = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 ${theme.textPrimary} placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400`}
+              className="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
             
@@ -454,12 +454,12 @@ const TaylorSwiftRanker = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 ${theme.textPrimary} placeholder-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400`}
+              className="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-purple-200 border border-purple-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
             />
 
             {message && (
-              <div className={`${theme.textPrimary} text-center text-sm bg-white bg-opacity-10 p-3 rounded-lg`}>
+              <div className="text-white text-center text-sm bg-white bg-opacity-10 p-3 rounded-lg">
                 {message}
               </div>
             )}
@@ -474,7 +474,7 @@ const TaylorSwiftRanker = () => {
             <button
               type="button"
               onClick={() => setIsSignUp(!isSignUp)}
-              className={`w-full ${theme.textSecondary} hover:${theme.textPrimary} text-sm transition`}
+              className="w-full text-purple-200 hover:text-white text-sm transition"
             >
               {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
@@ -486,13 +486,13 @@ const TaylorSwiftRanker = () => {
 
   if (view === 'albums') {
     return (
-      <div className={`min-h-screen ${theme.bgGradient} p-8`}>
+      <div className="min-h-screen bg-gradient-to-br from-red-400 via-yellow-400 through-green-400 via-blue-400 to-purple-500 p-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>Album Ranker</h1>
+            <h1 className="text-4xl font-bold text-white">Album Ranker</h1>
             <button
               onClick={handleSignOut}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
+              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
             >
               <LogOut size={20} />
               Sign Out
@@ -501,7 +501,7 @@ const TaylorSwiftRanker = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Start a New List</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
               <div className="grid gap-4">
                 {albums.map((album) => {
                   const albumTheme = getAlbumTheme(album.name);
@@ -523,11 +523,11 @@ const TaylorSwiftRanker = () => {
             </div>
 
             <div>
-              <h2 className={`text-2xl font-bold ${theme.textPrimary} mb-4`}>Pick Up Where You Left Off</h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
               {allRankings.length === 0 ? (
                 <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
-                  <p className={`${theme.textSecondary} mb-2`}>No saved rankings yet!</p>
-                  <p className={`${theme.textSecondary} text-sm`}>Create your first ranking by selecting an album</p>
+                  <p className="text-white mb-2">No saved rankings yet!</p>
+                  <p className="text-purple-100 text-sm">Create your first ranking by selecting an album</p>
                 </div>
               ) : (
                 <div className="space-y-3">
