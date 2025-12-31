@@ -313,9 +313,10 @@ const TaylorSwiftRanker = () => {
 
   const selectAlbum = async (album) => {
     setSelectedAlbum(album);
-    const baseSongs = album.songs;
-    const bonusSongs = album.bonus_songs || [];
-    const allSongs = [...baseSongs, ...bonusSongs];
+    
+    // Use detailed songs if available, otherwise fall back to simple array
+    const baseSongs = album.songs_detailed || album.songs.map(title => ({ title }));
+    const bonusSongs = album.bonus_songs_detailed || (album.bonus_songs || []).map(title => ({ title }));
     
     setSongs(baseSongs);
     setOriginalSongs(baseSongs);
@@ -342,8 +343,8 @@ const TaylorSwiftRanker = () => {
   };
 
   const createNewRanking = () => {
-       const baseSongs = selectedAlbum.songs;
-    const bonusSongs = selectedAlbum.bonus_songs || [];
+    const baseSongs = selectedAlbum.songs_detailed || selectedAlbum.songs.map(title => ({ title }));
+    const bonusSongs = selectedAlbum.bonus_songs_detailed || (selectedAlbum.bonus_songs || []).map(title => ({ title }));
     const songsToUse = includeBonusTracks ? [...baseSongs, ...bonusSongs] : baseSongs;
     
     setSongs(songsToUse);
@@ -355,19 +356,19 @@ const TaylorSwiftRanker = () => {
     setMessage('Starting new ranking!');
     setTimeout(() => setMessage(''), 2000);
   };
-  
+
   const toggleBonusTracks = () => {
-    const baseSongs = selectedAlbum.songs;
-    const bonusSongs = selectedAlbum.bonus_songs || [];
+    const baseSongs = selectedAlbum.songs_detailed || selectedAlbum.songs.map(title => ({ title }));
+    const bonusSongs = selectedAlbum.bonus_songs_detailed || (selectedAlbum.bonus_songs || []).map(title => ({ title }));
     
     if (!includeBonusTracks) {
-      // Turning ON - add bonus tracks to current list
       const newSongs = [...songs, ...bonusSongs];
       setSongs(newSongs);
       setOriginalSongs(newSongs);
     } else {
-      // Turning OFF - remove bonus tracks from current list
-      const filteredSongs = songs.filter(song => baseSongs.includes(song));
+      const filteredSongs = songs.filter(song => 
+        baseSongs.some(bs => (bs.title || bs) === (song.title || song))
+      );
       setSongs(filteredSongs);
       setOriginalSongs(baseSongs);
     }
@@ -867,9 +868,9 @@ const TaylorSwiftRanker = () => {
         onChange={toggleBonusTracks}
         className="sr-only peer"
       />
-      <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
-    </div>
-    <span className={`text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
+ <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+                  </div>
+                      <span className={`text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
   </label>
 )}
             </div>
@@ -884,9 +885,15 @@ const TaylorSwiftRanker = () => {
           </div>
           
           <div className="space-y-3">
-            {songs.map((song, index) => (
-              <div
-                key={`${song}-${index}`}
+            {songs.map((song, index) => {
+              const songTitle = song.title || song;
+              const trackInfo = song.track_number ? 
+                `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}` : 
+                null;
+              
+              return (
+                <div
+                  key={`${songTitle}-${index}`}
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnter={(e) => handleDragEnter(e, index)}
@@ -901,7 +908,12 @@ const TaylorSwiftRanker = () => {
                 <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
                   {index + 1}
                 </div>
-                <div className={`text-lg ${theme.textPrimary} flex-1`}>{song}</div>
+                <div className="flex-1">
+                    <div className={`text-lg ${theme.textPrimary}`}>{songTitle}</div>
+                    {trackInfo && (
+                      <div className={`text-xs ${theme.textSecondary} mt-1`}>{trackInfo}</div>
+                    )}
+                  </div>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -913,7 +925,8 @@ const TaylorSwiftRanker = () => {
                   <X size={20} />
                 </button>
               </div>
-            ))}
+            );
+})}
           </div>
         </div>
 
