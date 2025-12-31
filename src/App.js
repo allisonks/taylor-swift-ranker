@@ -697,30 +697,30 @@ const TaylorSwiftRanker = () => {
         />
       )}
       <div className="max-w-2xl mx-auto relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex justify-between items-center mb-8">
           <button
             onClick={() => setView('albums')}
             className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition`}
           >
             ← Back to Albums
           </button>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setShowRankingsList(!showRankingsList)}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
-              <List size={18} />
+              <List size={20} />
               <span className="text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
               <button
                 onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
-                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Customize"
               >
-                <Settings2 size={18} />
-                <span className="hidden sm:inline">Customize</span>
+                <Settings2 size={20} />
+                Customize
               </button>
               {showCustomizeMenu && (
                 <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
@@ -761,10 +761,9 @@ const TaylorSwiftRanker = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
             >
-              <LogOut size={18} />
-              <span className="hidden sm:inline">Sign Out</span>
+              <LogOut size={20} />
             </button>
           </div>
         </div>
@@ -879,7 +878,44 @@ const TaylorSwiftRanker = () => {
               </button>
             </div>
           )}
-                </div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <input
+                type="text"
+                value={tempRankingName}
+                onChange={(e) => setTempRankingName(e.target.value)}
+                className={`text-3xl font-bold ${theme.textPrimary} bg-white bg-opacity-20 px-4 py-2 rounded-lg border-2 border-pink-400 focus:outline-none text-center`}
+                autoFocus
+              />
+              <button
+                onClick={saveTitle}
+                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
+                title="Save title"
+              >
+                <Check size={20} />
+              </button>
+              <button
+                onClick={cancelEditTitle}
+                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition"
+                title="Cancel"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>
+                {rankingName}
+              </h1>
+              <button
+                onClick={startEditingTitle}
+                className={`${theme.textSecondary} hover:${theme.textPrimary} transition`}
+                title="Edit title"
+              >
+                <Edit2 size={24} />
+              </button>
+            </div>
+          )}
+        </div>
 
         {message && (
           <div className={`mb-4 ${theme.textPrimary} text-center bg-green-500 bg-opacity-20 p-3 rounded-lg`}>
@@ -887,30 +923,30 @@ const TaylorSwiftRanker = () => {
           </div>
         )}
 
-        <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl mb-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4">
-            <div className="flex items-center gap-4 flex-wrap">
-              {hasBonusTracks && (
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={includeBonusTracks}
-                      onChange={toggleBonusTracks}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+        <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-4">
+                          {hasBonusTracks && (
+  <label className="flex items-center gap-2 cursor-pointer">
+    <div className="relative">
+      <input
+        type="checkbox"
+        checked={includeBonusTracks}
+        onChange={toggleBonusTracks}
+        className="sr-only peer"
+      />
+ <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
                   </div>
-                  <span className={`text-xs sm:text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
-                </label>
-              )}
+                      <span className={`text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
+  </label>
+)}
             </div>
             <button
               onClick={resetToOriginal}
-              className={`flex items-center gap-2 ${theme.textSecondary} hover:${theme.textPrimary} transition text-sm`}
+              className={`flex items-center gap-2 ${theme.textSecondary} hover:${theme.textPrimary} transition`}
               title="Reset to original tracklist"
             >
-              <RotateCcw size={18} />
+              <RotateCcw size={20} />
               Reset
             </button>
           </div>
@@ -925,55 +961,55 @@ const TaylorSwiftRanker = () => {
               return (
                 <div
                   key={`${songTitle}-${index}`}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onDragEnd={handleDragEnd}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
-                    draggedItem === index ? 'opacity-50 scale-95' : ''
-                  }`}
-                >
-                  <GripVertical className={theme.textSecondary} size={20} />
-                  <div className={`text-xl sm:text-2xl font-bold ${theme.textPrimary} w-8 sm:w-12 text-center flex-shrink-0`}>
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className={`text-base sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onDragEnd={handleDragEnd}
+                className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
+                  draggedItem === index ? 'opacity-50 scale-95' : ''
+                }`}
+              >
+                <GripVertical className={theme.textSecondary} size={24} />
+                <div className={`text-2xl font-bold ${theme.textPrimary} w-12 text-center flex-shrink-0`}>
+                  {index + 1}
+                </div>
+                <div className="flex-1">
+                    <div className={`text-lg ${theme.textPrimary}`}>{songTitle}</div>
                     {trackInfo && (
                       <div className={`text-xs ${theme.textSecondary} mt-1`}>{trackInfo}</div>
                     )}
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeSong(index);
-                    }}
-                    className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
-                    title="Remove track"
-                  >
-                    <X size={18} />
-                  </button>
-                </div>
-              );
-            })}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSong(index);
+                  }}
+                  className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
+                  title="Remove track"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            );
+})}
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex gap-4">
           <button
             onClick={saveRanking}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 transition"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition"
           >
-            <Save size={20} />
+            <Save size={24} />
             Save Ranking
           </button>
           <button
             onClick={() => setShowShareView(true)}
-            className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 shadow-lg transition"
+            className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 shadow-lg transition"
           >
-            <Share2 size={20} />
+            <Share2 size={24} />
             Share
           </button>
         </div>
