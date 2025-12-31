@@ -955,7 +955,7 @@ const TaylorSwiftRanker = () => {
                   className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
                   title="Remove track"
                 >
-                  <X size={18/>
+                  <X size={18} />
                 </button>
               </div>
             );
