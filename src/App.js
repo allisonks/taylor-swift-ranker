@@ -210,6 +210,8 @@ const TaylorSwiftRanker = () => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [tempRankingName, setTempRankingName] = useState('');
   const [originalSongs, setOriginalSongs] = useState([]);
+  const [includeBonusTracks, setIncludeBonusTracks] = useState(false);
+  const [hasBonusTracks, setHasBonusTracks] = useState(false);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -249,7 +251,13 @@ const TaylorSwiftRanker = () => {
   const loadAlbums = async () => {
     try {
       const data = await supabase.getAlbums();
-      setAlbums(data);
+      // Sort albums by release date (newest first)
+      const sortedAlbums = data.sort((a, b) => {
+        const dateA = a.release_date ? new Date(a.release_date) : new Date(0);
+        const dateB = b.release_date ? new Date(b.release_date) : new Date(0);
+        return dateB - dateA;
+      });
+      setAlbums(sortedAlbums);
       await loadAllRankings();
     } catch (error) {
       console.error('Error loading albums:', error);
@@ -305,8 +313,14 @@ const TaylorSwiftRanker = () => {
 
   const selectAlbum = async (album) => {
     setSelectedAlbum(album);
-    setSongs(album.songs);
-    setOriginalSongs(album.songs);
+    const baseSongs = album.songs;
+    const bonusSongs = album.bonus_songs || [];
+    const allSongs = [...baseSongs, ...bonusSongs];
+    
+    setSongs(baseSongs);
+    setOriginalSongs(baseSongs);
+    setHasBonusTracks(bonusSongs.length > 0);
+    setIncludeBonusTracks(false);
     setAlbumImage(null);
     setRankingName(`My Favorite ${album.name} Tracks`);
     setCurrentRankingId(null);
@@ -328,14 +342,37 @@ const TaylorSwiftRanker = () => {
   };
 
   const createNewRanking = () => {
-    setSongs(selectedAlbum.songs);
-    setOriginalSongs(selectedAlbum.songs);
+       const baseSongs = selectedAlbum.songs;
+    const bonusSongs = selectedAlbum.bonus_songs || [];
+    const songsToUse = includeBonusTracks ? [...baseSongs, ...bonusSongs] : baseSongs;
+    
+    setSongs(songsToUse);
+    setOriginalSongs(songsToUse);
     setRankingName(`My Favorite ${selectedAlbum.name} Tracks`);
     setCurrentRankingId(null);
     setShowRankingsList(false);
     setIsEditingTitle(false);
     setMessage('Starting new ranking!');
     setTimeout(() => setMessage(''), 2000);
+  };
+  
+  const toggleBonusTracks = () => {
+    const baseSongs = selectedAlbum.songs;
+    const bonusSongs = selectedAlbum.bonus_songs || [];
+    
+    if (!includeBonusTracks) {
+      // Turning ON - add bonus tracks to current list
+      const newSongs = [...songs, ...bonusSongs];
+      setSongs(newSongs);
+      setOriginalSongs(newSongs);
+    } else {
+      // Turning OFF - remove bonus tracks from current list
+      const filteredSongs = songs.filter(song => baseSongs.includes(song));
+      setSongs(filteredSongs);
+      setOriginalSongs(baseSongs);
+    }
+    
+    setIncludeBonusTracks(!includeBonusTracks);
   };
 
   const removeSong = (index) => {
@@ -817,9 +854,22 @@ const TaylorSwiftRanker = () => {
 
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mb-6">
           <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-4">
             <h3 className={`text-lg font-semibold ${theme.textPrimary}`}>
               {songs.length} of {originalSongs.length} tracks
             </h3>
+                          {hasBonusTracks && (
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={includeBonusTracks}
+                    onChange={toggleBonusTracks}
+                    className="w-5 h-5 rounded cursor-pointer"
+                  />
+                  <span className={`text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
+                </label>
+              )}
+            </div>
             <button
               onClick={resetToOriginal}
               className={`flex items-center gap-2 ${theme.textSecondary} hover:${theme.textPrimary} transition`}
