@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
@@ -719,7 +719,7 @@ const TaylorSwiftRanker = () => {
                 className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Customize"
               >
-                <Settings size={20} />
+                <Settings2 size={20} />
                 Customize
               </button>
               {showCustomizeMenu && (
