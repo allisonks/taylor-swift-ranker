@@ -212,6 +212,7 @@ const TaylorSwiftRanker = () => {
   const [originalSongs, setOriginalSongs] = useState([]);
   const [includeBonusTracks, setIncludeBonusTracks] = useState(false);
   const [hasBonusTracks, setHasBonusTracks] = useState(false);
+  const [showCustomizeMenu, setShowCustomizeMenu] = useState(false);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -684,8 +685,18 @@ const TaylorSwiftRanker = () => {
   }
 
   return (
-    <div className={`min-h-screen ${theme.bgGradient} p-8`}>
-      <div className="max-w-2xl mx-auto">
+    <div className={`min-h-screen ${theme.bgGradient} p-8 relative`}>
+      {albumImage && (
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `url(${albumImage})`,
+            backgroundSize: '200px 200px',
+            backgroundRepeat: 'repeat'
+          }}
+        />
+      )}
+      <div className="max-w-2xl mx-auto relative z-10">
         <div className="flex justify-between items-center mb-8">
           <button
             onClick={() => setView('albums')}
@@ -702,20 +713,52 @@ const TaylorSwiftRanker = () => {
               <List size={20} />
               <span className="text-sm">{savedRankings.length}</span>
             </button>
-            <button
-              onClick={() => setShowThemeSelector(!showThemeSelector)}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
-              title="Change color theme"
-            >
-              <Palette size={20} />
-            </button>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
-              title="Upload album image"
-            >
-              <ImageIcon size={20} />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
+                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
+                title="Customize"
+              >
+                <Settings size={20} />
+                Customize
+              </button>
+              {showCustomizeMenu && (
+                <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
+                  <button
+                    onClick={() => {
+                      setShowThemeSelector(true);
+                      setShowCustomizeMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition"
+                  >
+                    <Palette size={18} />
+                    Change Color Theme
+                  </button>
+                  <button
+                    onClick={() => {
+                      fileInputRef.current?.click();
+                      setShowCustomizeMenu(false);
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition"
+                  >
+                    <ImageIcon size={18} />
+                    Upload Album Image
+                  </button>
+                  {albumImage && (
+                    <button
+                      onClick={() => {
+                        setAlbumImage(null);
+                        setShowCustomizeMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-red-600 rounded-b-lg transition"
+                    >
+                      <X size={18} />
+                      Remove Image
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
             <button
               onClick={handleSignOut}
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
@@ -797,12 +840,6 @@ const TaylorSwiftRanker = () => {
         )}
 
         <div className="text-center mb-8">
-          {albumImage && (
-            <div className="flex justify-center mb-4">
-              <img src={albumImage} alt="Album" className="w-24 h-24 rounded-lg object-cover shadow-lg" />
-            </div>
-          )}
-          
           {isEditingTitle ? (
             <div className="flex items-center justify-center gap-2 mb-4">
               <input
@@ -841,10 +878,43 @@ const TaylorSwiftRanker = () => {
               </button>
             </div>
           )}
-          
-          <p className={`${theme.textSecondary} text-sm`}>
-            Drag and drop to reorder the songs
-          </p>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <input
+                type="text"
+                value={tempRankingName}
+                onChange={(e) => setTempRankingName(e.target.value)}
+                className={`text-3xl font-bold ${theme.textPrimary} bg-white bg-opacity-20 px-4 py-2 rounded-lg border-2 border-pink-400 focus:outline-none text-center`}
+                autoFocus
+              />
+              <button
+                onClick={saveTitle}
+                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
+                title="Save title"
+              >
+                <Check size={20} />
+              </button>
+              <button
+                onClick={cancelEditTitle}
+                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition"
+                title="Cancel"
+              >
+                <X size={20} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>
+                {rankingName}
+              </h1>
+              <button
+                onClick={startEditingTitle}
+                className={`${theme.textSecondary} hover:${theme.textPrimary} transition`}
+                title="Edit title"
+              >
+                <Edit2 size={24} />
+              </button>
+            </div>
+          )}
         </div>
 
         {message && (
@@ -856,9 +926,6 @@ const TaylorSwiftRanker = () => {
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mb-6">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
-            <h3 className={`text-lg font-semibold ${theme.textPrimary}`}>
-              {songs.length} of {originalSongs.length} tracks
-            </h3>
                           {hasBonusTracks && (
   <label className="flex items-center gap-2 cursor-pointer">
     <div className="relative">
