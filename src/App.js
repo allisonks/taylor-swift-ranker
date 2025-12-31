@@ -841,43 +841,7 @@ const TaylorSwiftRanker = () => {
 
         <div className="text-center mb-8">
           {isEditingTitle ? (
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <input
-                type="text"
-                value={tempRankingName}
-                onChange={(e) => setTempRankingName(e.target.value)}
-                className={`text-3xl font-bold ${theme.textPrimary} bg-white bg-opacity-20 px-4 py-2 rounded-lg border-2 border-pink-400 focus:outline-none text-center`}
-                autoFocus
-              />
-              <button
-                onClick={saveTitle}
-                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
-                title="Save title"
-              >
-                <Check size={20} />
-              </button>
-              <button
-                onClick={cancelEditTitle}
-                className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition"
-                title="Cancel"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <h1 className={`text-4xl font-bold ${theme.textPrimary}`}>
-                {rankingName}
-              </h1>
-              <button
-                onClick={startEditingTitle}
-                className={`${theme.textSecondary} hover:${theme.textPrimary} transition`}
-                title="Edit title"
-              >
-                <Edit2 size={24} />
-              </button>
-            </div>
-          )}
+       
             <div className="flex items-center justify-center gap-2 mb-4">
               <input
                 type="text"
