@@ -8,63 +8,75 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const COLOR_THEMES = {
   torturedPoets: {
     name: 'Tortured Poets',
-    bgGradient: 'bg-gradient-to-br from-orange-50 via-white to-zinc-200',
+    bgGradient: 'bg-gradient-to-b from-stone-400 to-orange-50',
     textPrimary: 'text-black',
     textSecondary: 'text-yellow-900'
   },
   midnights: {
     name: 'Midnights',
-    bgGradient: 'bg-gradient-to-br from-indigo-950 via-blue-850 to-sky-950',
+    bgGradient: 'bg-gradient-to-b from-blue-900 to-cyan-800',
     textPrimary: 'text-white',
     textSecondary: 'text-purple-100'
   },
   folklore: {
     name: 'Folklore',
-    bgGradient: 'bg-gradient-to-br from-stone-600 via-gray-300 to-slate-600',
+    bgGradient: 'bg-gradient-to-b from-neutral-500 to-stone-200',
     textPrimary: 'text-black',
     textSecondary: 'text-gray-900'
   },
   evermore: {
     name: 'Evermore',
-    bgGradient: 'bg-gradient-to-br from-amber-700 via-stone-400 to-yellow-700',
+    bgGradient: 'bg-gradient-to-b from-amber-700 to-stone-500',
     textPrimary: 'text-white',
     textSecondary: 'text-amber-100'
   },
   lover: {
     name: 'Lover',
-    bgGradient: 'bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400',
+    bgGradient: 'bg-gradient-to-b from-pink-300 to-blue-300',
     textPrimary: 'text-white',
     textSecondary: 'text-orange-100'
   },
   reputation: {
     name: 'Reputation',
-    bgGradient: 'bg-gradient-to-br from-slate-900 via-black to-green-950',
+    bgGradient: 'bg-gradient-to-b from-neutral-900 to-green-950',
     textPrimary: 'text-white',
     textSecondary: 'text-red-500'
   },
   red: {
     name: 'Red',
-    bgGradient: 'bg-gradient-to-br from-red-900 via-orange-800 to-red-950',
+    bgGradient: 'bg-gradient-to-b from-red-700 to-orange-900',
     textPrimary: 'text-white',
     textSecondary: 'text-red-200'
   },
   nineteen89: {
     name: '1989',
-    bgGradient: 'bg-gradient-to-br from-sky-400 via-blue-300 to-orange-50',
+    bgGradient: 'bg-gradient-to-b from-sky-350 to-orange-50',
     textPrimary: 'text-gray-900',
     textSecondary: 'text-blue-900'
   },
   showgirl: {
     name: 'Showgirl',
-    bgGradient: 'bg-gradient-to-br from-emerald-600 via-orange-500 to-teal-600',
+    bgGradient: 'bg-gradient-to-b from-teal-600 to-orange-500',
     textPrimary: 'text-white',
-    textSecondary: 'text-zinc-200'
+    textSecondary: 'text-zinc-100'
+  },
+  speaknow: {
+    name: 'Speak Now',
+    bgGradient: 'bg-gradient-to-b from-purple-700 to-pink-800',
+    textPrimary: 'text-white',
+    textSecondary: 'text-orange-50'
+  },
+  fearless: {
+    name: "Fearless",
+    bgGradient: 'bg-gradient-to-b from-yellow-300 to-amber-700',
+    textPrimary: 'text-black',
+    textSecondary: 'text-amber-950'
   },
   debut: {
     name: 'Debut',
-    bgGradient: 'bg-gradient-to-br from-cyan-600 via-yellow-300 to-emerald-600',
+    bgGradient: 'bg-gradient-to-b from-emerald-600 to-cyan-400',
     textPrimary: 'text-white',
-    textSecondary: 'text-pink-300'
+    textSecondary: 'text-pink-50'
   }
 };
 
