@@ -884,8 +884,7 @@ const TaylorSwiftRanker = () => {
         )}
 
         <div className="text-center mb-8">
-          {isEditingTitle ? (
-       
+          {isEditingTitle ? (       
             <div className="flex items-center justify-center gap-2 mb-4">
               <input
                 type="text"
@@ -931,7 +930,7 @@ const TaylorSwiftRanker = () => {
           </div>
         )}
 
-                <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl mb-6">
+<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl mb-6 overflow-hidden">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4">
             <div className="flex items-center gap-4 flex-wrap">
 
@@ -960,7 +959,8 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
           
-          <div className="space-y-3">
+<div className="md:px-0 -mx-4 px-4 md:mx-0">
+            <div className="space-y-3 md:px-0 px-4">
             {songs.map((song, index) => {
               const songTitle = song.title || song;
               const trackInfo = song.track_number ? 
@@ -980,6 +980,7 @@ const TaylorSwiftRanker = () => {
 onTouchStart={(e) => handleTouchStart(e, index)}
                   onTouchMove={(e) => handleTouchMove(e, index)}
                   onTouchEnd={handleTouchEnd}
+                  style={{ touchAction: 'none' }}
                   className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
                   draggedItem === index ? 'opacity-50 scale-95' : ''
                 }`}
@@ -1007,6 +1008,7 @@ onTouchStart={(e) => handleTouchStart(e, index)}
               </div>
             );
           })}
+          </div>
           </div>
         </div>
 
