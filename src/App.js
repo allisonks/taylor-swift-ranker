@@ -440,6 +440,7 @@ const TaylorSwiftRanker = () => {
   const handleDragStart = (e, index) => {
     setDraggedItem(index);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.currentTarget);
   };
 
   const handleDragEnter = (e, index) => {
