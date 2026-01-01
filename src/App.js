@@ -9,14 +9,14 @@ const COLOR_THEMES = {
   torturedPoets: {
     name: 'Tortured Poets',
     bgGradient: 'bg-gradient-to-b from-stone-400 to-orange-50',
-    textPrimary: 'text-black',
-    textSecondary: 'text-yellow-900'
+    textPrimary: 'text-stone-900',
+    textSecondary: 'text-yellow-950'
   },
   midnights: {
     name: 'Midnights',
     bgGradient: 'bg-gradient-to-b from-blue-900 to-cyan-800',
-    textPrimary: 'text-white',
-    textSecondary: 'text-purple-100'
+    textPrimary: 'text-sky-50',
+    textSecondary: 'text-purple-50'
   },
   folklore: {
     name: 'Folklore',
@@ -27,19 +27,19 @@ const COLOR_THEMES = {
   evermore: {
     name: 'Evermore',
     bgGradient: 'bg-gradient-to-b from-amber-700 to-stone-500',
-    textPrimary: 'text-white',
+    textPrimary: 'text-amber-50',
     textSecondary: 'text-amber-100'
   },
   lover: {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-b from-pink-300 to-blue-300',
-    textPrimary: 'text-white',
-    textSecondary: 'text-orange-100'
+    textPrimary: 'text-purple-950',
+    textSecondary: 'text-fuscia-950'
   },
   reputation: {
     name: 'Reputation',
     bgGradient: 'bg-gradient-to-b from-neutral-900 to-green-950',
-    textPrimary: 'text-white',
+    textPrimary: 'text-stone-50',
     textSecondary: 'text-red-500'
   },
   red: {
