@@ -50,7 +50,7 @@ const COLOR_THEMES = {
   },
   nineteen89: {
     name: '1989',
-    bgGradient: 'bg-gradient-to-b from-sky-350 to-orange-50',
+    bgGradient: 'bg-gradient-to-b from-sky-300 to-orange-50',
     textPrimary: 'text-gray-900',
     textSecondary: 'text-blue-900'
   },
