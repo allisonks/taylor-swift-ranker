@@ -473,35 +473,35 @@ const TaylorSwiftRanker = () => {
   };
   
   const handleTouchStart = (e, index) => {
+        const touch = e.touches[0];
     setDraggedItem(index);
-    setTouchStartY(e.touches[0].clientY);
+    setTouchStartY(touch.clientY);
   };
 
   const handleTouchMove = (e, index) => {
     if (draggedItem === null) return;
     
-    e.preventDefault();
-    setTouchCurrentY(e.touches[0].clientY);
+    const touch = e.touches[0];
+    const touchY = touch.clientY;
     
-    const touchY = e.touches[0].clientY;
-    const startY = touchStartY;
-    const diff = touchY - startY;
+    // Find which element we're hovering over
+    const elements = document.elementsFromPoint(touch.clientX, touchY);
+    const songCards = Array.from(document.querySelectorAll('[data-song-index]'));
     
-    // Determine if we should swap
-    if (Math.abs(diff) > 60) { // threshold for swapping
-      const direction = diff > 0 ? 1 : -1;
-      const targetIndex = draggedItem + direction;
-      
-      if (targetIndex >= 0 && targetIndex < songs.length && targetIndex !== draggedItem) {
+    for (const element of elements) {
+      const targetIndex = element.getAttribute('data-song-index');
+      if (targetIndex !== null && parseInt(targetIndex) !== draggedItem) {
+        const newIndex = parseInt(targetIndex);
+        
         const newSongs = [...songs];
         const draggedSong = newSongs[draggedItem];
         
         newSongs.splice(draggedItem, 1);
-        newSongs.splice(targetIndex, 0, draggedSong);
+        newSongs.splice(newIndex, 0, draggedSong);
         
         setSongs(newSongs);
-        setDraggedItem(targetIndex);
-        setTouchStartY(touchY);
+        setDraggedItem(newIndex);
+        break;
       }
     }
   };
@@ -745,7 +745,7 @@ const TaylorSwiftRanker = () => {
             onClick={() => setView('albums')}
             className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition`}
           >
-            ← Back to Albums
+            ← Back to Main
           </button>
           <div className="flex items-center gap-2 flex-wrap">
             <button
@@ -970,6 +970,7 @@ const TaylorSwiftRanker = () => {
               return (
                 <div
                   key={`${songTitle}-${index}`}
+                  data-song-index={index}
                 draggable
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragEnter={(e) => handleDragEnter(e, index)}
@@ -979,7 +980,7 @@ const TaylorSwiftRanker = () => {
 onTouchStart={(e) => handleTouchStart(e, index)}
                   onTouchMove={(e) => handleTouchMove(e, index)}
                   onTouchEnd={handleTouchEnd}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none touch-none ${
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
                   draggedItem === index ? 'opacity-50 scale-95' : ''
                 }`}
               >
