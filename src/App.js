@@ -213,6 +213,8 @@ const TaylorSwiftRanker = () => {
   const [includeBonusTracks, setIncludeBonusTracks] = useState(false);
   const [hasBonusTracks, setHasBonusTracks] = useState(false);
   const [showCustomizeMenu, setShowCustomizeMenu] = useState(false);
+  const [touchStartY, setTouchStartY] = useState(null);
+  const [touchCurrentY, setTouchCurrentY] = useState(null);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -468,6 +470,46 @@ const TaylorSwiftRanker = () => {
 
   const handleDragEnd = () => {
     setDraggedItem(null);
+  };
+  
+  const handleTouchStart = (e, index) => {
+    setDraggedItem(index);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e, index) => {
+    if (draggedItem === null) return;
+    
+    e.preventDefault();
+    setTouchCurrentY(e.touches[0].clientY);
+    
+    const touchY = e.touches[0].clientY;
+    const startY = touchStartY;
+    const diff = touchY - startY;
+    
+    // Determine if we should swap
+    if (Math.abs(diff) > 60) { // threshold for swapping
+      const direction = diff > 0 ? 1 : -1;
+      const targetIndex = draggedItem + direction;
+      
+      if (targetIndex >= 0 && targetIndex < songs.length && targetIndex !== draggedItem) {
+        const newSongs = [...songs];
+        const draggedSong = newSongs[draggedItem];
+        
+        newSongs.splice(draggedItem, 1);
+        newSongs.splice(targetIndex, 0, draggedSong);
+        
+        setSongs(newSongs);
+        setDraggedItem(targetIndex);
+        setTouchStartY(touchY);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setDraggedItem(null);
+    setTouchStartY(null);
+    setTouchCurrentY(null);
   };
 
   const handleImageUpload = (e) => {
@@ -934,7 +976,10 @@ const TaylorSwiftRanker = () => {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragEnd={handleDragEnd}
-                className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
+onTouchStart={(e) => handleTouchStart(e, index)}
+                  onTouchMove={(e) => handleTouchMove(e, index)}
+                  onTouchEnd={handleTouchEnd}
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none touch-none ${
                   draggedItem === index ? 'opacity-50 scale-95' : ''
                 }`}
               >
