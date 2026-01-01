@@ -252,6 +252,10 @@ const TaylorSwiftRanker = () => {
       return 'debut';
     } else if (name.includes('tortured')) {
       return 'torturedPoets';
+    } else if (name.includes('speak')) {
+      return 'speaknow';
+    } else if (name.includes('fearless')) {
+      return 'fearless';
     } else if (name.includes('red')) {
       return 'red';
     } else {
