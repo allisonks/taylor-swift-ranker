@@ -887,6 +887,25 @@ const TaylorSwiftRanker = () => {
                 </div>
               )}
             </div>
+            
+            <button
+              onClick={saveRanking}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+              title="Save"
+            >
+              <Save size={16} />
+              <span>Save</span>
+            </button>
+            
+            <button
+              onClick={() => setShowShareView(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition"
+              title="Share"
+            >
+              <Share2 size={16} />
+              <span>Share</span>
+            </button>
+
             <button
               onClick={handleSignOut}
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
@@ -1095,23 +1114,6 @@ const TaylorSwiftRanker = () => {
             })}
           </div>
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 md:block hidden">
-          <button
-            onClick={saveRanking}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-2 transition mr-4"
-          >
-            <Save size={18} />
-            Save Ranking
-          </button>
-          <button
-            onClick={() => setShowShareView(true)}
-            className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-3 shadow-lg transition"
-          >
-            <Share2 size={18} />
-            Share
-          </button>
         </div>
       </div>
     </div>
