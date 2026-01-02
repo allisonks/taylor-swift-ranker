@@ -360,6 +360,15 @@ const TaylorSwiftRanker = () => {
     setRankingName(ranking.ranking_name || '');
     setCurrentRankingId(ranking.id);
     setShowRankingsList(false);
+    
+    // Update visible tracks based on loaded ranking
+    const baseSongs = selectedAlbum.songs_detailed || selectedAlbum.songs.map(title => ({ title }));
+    const bonusSongs = selectedAlbum.bonus_songs_detailed || (selectedAlbum.bonus_songs || []).map(title => ({ title }));
+    const allTracks = [...baseSongs, ...bonusSongs];
+    
+    setAllAvailableTracks(allTracks);
+    setVisibleTrackTitles(new Set(ranking.ranked_songs.map(s => s.title || s)));
+    
     setMessage('Ranking loaded!');
     setTimeout(() => setMessage(''), 2000);
   };
