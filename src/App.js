@@ -225,6 +225,9 @@ const TaylorSwiftRanker = () => {
   const [includeBonusTracks, setIncludeBonusTracks] = useState(false);
   const [hasBonusTracks, setHasBonusTracks] = useState(false);
   const [showCustomizeMenu, setShowCustomizeMenu] = useState(false);
+    const [showTracksMenu, setShowTracksMenu] = useState(false);
+  const [allAvailableTracks, setAllAvailableTracks] = useState([]);
+  const [visibleTrackTitles, setVisibleTrackTitles] = useState(new Set());
   const [touchStartY, setTouchStartY] = useState(null);
   const [touchCurrentY, setTouchCurrentY] = useState(null);
   const shareRef = useRef(null);
@@ -368,11 +371,40 @@ const TaylorSwiftRanker = () => {
     
     setSongs(songsToUse);
     setOriginalSongs(songsToUse);
+    setVisibleTrackTitles(new Set(songsToUse.map(s => s.title || s)));
     setRankingName(`My Favorite ${selectedAlbum.name} Tracks`);
     setCurrentRankingId(null);
     setShowRankingsList(false);
     setIsEditingTitle(false);
     setMessage('Starting new ranking!');
+    setTimeout(() => setMessage(''), 2000);
+  };
+  
+  const toggleTrackVisibility = (track) => {
+    const trackTitle = track.title || track;
+    const newVisible = new Set(visibleTrackTitles);
+    
+    if (newVisible.has(trackTitle)) {
+      newVisible.delete(trackTitle);
+      setSongs(songs.filter(s => (s.title || s) !== trackTitle));
+    } else {
+      newVisible.add(trackTitle);
+      const trackToAdd = allAvailableTracks.find(t => (t.title || t) === trackTitle);
+      setSongs([...songs, trackToAdd]);
+    }
+    
+    setVisibleTrackTitles(newVisible);
+  };
+
+  const resetToOriginal = () => {
+    const baseSongs = selectedAlbum.songs_detailed || selectedAlbum.songs.map(title => ({ title }));
+    const bonusSongs = selectedAlbum.bonus_songs_detailed || (selectedAlbum.bonus_songs || []).map(title => ({ title }));
+    const songsToUse = includeBonusTracks ? [...baseSongs, ...bonusSongs] : baseSongs;
+    
+    setSongs(songsToUse);
+    setOriginalSongs(songsToUse);
+    setVisibleTrackTitles(new Set(songsToUse.map(s => s.title || s)));
+    setMessage('Tracklist reset!');
     setTimeout(() => setMessage(''), 2000);
   };
 
@@ -384,27 +416,29 @@ const TaylorSwiftRanker = () => {
       const newSongs = [...songs, ...bonusSongs];
       setSongs(newSongs);
       setOriginalSongs(newSongs);
+      setVisibleTrackTitles(new Set(newSongs.map(s => s.title || s)));
     } else {
       const filteredSongs = songs.filter(song => 
         baseSongs.some(bs => (bs.title || bs) === (song.title || song))
       );
       setSongs(filteredSongs);
       setOriginalSongs(baseSongs);
+      setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
     }
     
     setIncludeBonusTracks(!includeBonusTracks);
   };
 
   const removeSong = (index) => {
+    const songToRemove = songs[index];
+    const trackTitle = songToRemove.title || songToRemove;
     const newSongs = songs.filter((_, i) => i !== index);
+    const newVisible = new Set(visibleTrackTitles);
+    newVisible.delete(trackTitle);
+    
     setSongs(newSongs);
-  };
-
-  const resetToOriginal = () => {
-    setSongs(originalSongs);
-    setMessage('Tracklist reset!');
-    setTimeout(() => setMessage(''), 2000);
-  };
+    setVisibleTrackTitles(newVisible);
+    };
 
   const startEditingTitle = () => {
     setTempRankingName(rankingName);
@@ -810,6 +844,14 @@ const TaylorSwiftRanker = () => {
             >
               <Share2 size={16} />
             </button>
+                        
+            <button
+              onClick={() => setShowTracksMenu(!showTracksMenu)}
+              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+              title="Manage Tracks"
+            >
+              <Music size={16} />
+            </button>
             
             <button
               onClick={handleSignOut}
@@ -820,6 +862,56 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
         </div>
+                
+        {showTracksMenu && (
+          <div className="fixed top-14 right-2 w-72 max-h-96 overflow-y-auto bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+            <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
+            
+            {hasBonusTracks && (
+              <div className="mb-3 pb-3 border-b border-gray-300">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={includeBonusTracks}
+                    onChange={toggleBonusTracks}
+                    className="w-4 h-4 rounded"
+                  />
+                  <span className="text-sm text-gray-800">Include Bonus Tracks</span>
+                </label>
+              </div>
+            )}
+            
+            <button
+              onClick={() => {
+                resetToOriginal();
+                setShowTracksMenu(false);
+              }}
+              className="w-full flex items-center gap-2 text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-lg mb-3 transition"
+            >
+              <RotateCcw size={16} />
+              Reset to Original
+            </button>
+            
+            <div className="space-y-1 max-h-60 overflow-y-auto">
+              {allAvailableTracks.map((track, index) => {
+                const trackTitle = track.title || track;
+                const isVisible = visibleTrackTitles.has(trackTitle);
+                
+                return (
+                  <label key={index} className="flex items-start gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+                    <input
+                      type="checkbox"
+                      checked={isVisible}
+                      onChange={() => toggleTrackVisibility(track)}
+                      className="mt-1 w-4 h-4 rounded flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-800">{trackTitle}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="max-w-2xl mx-auto relative z-10 p-8 pt-20 md:pt-8">
@@ -905,8 +997,69 @@ const TaylorSwiftRanker = () => {
               <Share2 size={16} />
               <span>Share</span>
             </button>
-
-            <button
+                        
+            <div className="relative">
+              <button
+                onClick={() => setShowTracksMenu(!showTracksMenu)}
+                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
+                title="Manage Tracks"
+              >
+                <Music size={16} />
+                <span>Tracks</span>
+              </button>
+              
+              {showTracksMenu && (
+                <div className="absolute right-0 top-12 w-80 max-h-96 overflow-y-auto bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+                  <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
+                  
+                  {hasBonusTracks && (
+                    <div className="mb-3 pb-3 border-b border-gray-300">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={includeBonusTracks}
+                          onChange={toggleBonusTracks}
+                          className="w-4 h-4 rounded"
+                        />
+                        <span className="text-sm text-gray-800">Include Bonus Tracks</span>
+                      </label>
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={() => {
+                      resetToOriginal();
+                      setShowTracksMenu(false);
+                    }}
+                    className="w-full flex items-center gap-2 text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-lg mb-3 transition"
+                  >
+                    <RotateCcw size={16} />
+                    Reset to Original
+                  </button>
+                  
+                  <div className="space-y-1 max-h-60 overflow-y-auto">
+                    {allAvailableTracks.map((track, index) => {
+                      const trackTitle = track.title || track;
+                      const isVisible = visibleTrackTitles.has(trackTitle);
+                      
+                      return (
+                        <label key={index} className="flex items-start gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+                          <input
+                            type="checkbox"
+                            checked={isVisible}
+                            onChange={() => toggleTrackVisibility(track)}
+                            className="mt-1 w-4 h-4 rounded flex-shrink-0"
+                          />
+                          <span className="text-sm text-gray-800">{trackTitle}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+                        <button
               onClick={handleSignOut}
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
             >
@@ -1034,35 +1187,7 @@ const TaylorSwiftRanker = () => {
           </div>
         )}
 
-<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-3 sm:p-6 shadow-2xl mb-4 sm:mb-6 overflow-hidden">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-4">
-            <div className="flex items-center gap-4 flex-wrap">
-
-                          {hasBonusTracks && (
-  <label className="flex items-center gap-2 cursor-pointer">
-    <div className="relative">
-      <input
-        type="checkbox"
-        checked={includeBonusTracks}
-        onChange={toggleBonusTracks}
-        className="sr-only peer"
-      />
- <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
-                  </div>
-<span className={`text-xs sm:text-sm ${theme.textSecondary}`}>Include Bonus Tracks</span>
-  </label>
-)}
-            </div>
-            <button
-              onClick={resetToOriginal}
-                            className={`flex items-center gap-2 ${theme.textSecondary} hover:${theme.textPrimary} transition text-sm`}
-              title="Reset to original tracklist"
-            >
-                            <RotateCcw size={18} />
-              Reset
-            </button>
-          </div>
-          
+<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-3 sm:p-6 shadow-2xl mb-4 sm:mb-6 overflow-hidden">        
           <div className="md:px-0 -mx-3 px-3 md:mx-0">
             <div className="space-y-2 sm:space-y-3 md:px-0 px-3">
             {songs.map((song, index) => {
