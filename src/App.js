@@ -764,8 +764,7 @@ const TaylorSwiftRanker = () => {
             className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
             title="Back to Main"
           >
-          <size={16} />
-            <span className="text-lg">←</span>
+          <span className="text-lg">←</span>
           </button>
           
           <div className="flex items-center gap-1">
