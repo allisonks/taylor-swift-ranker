@@ -743,8 +743,8 @@ const TaylorSwiftRanker = () => {
     );
   }
 
-  return (
-    <div className={`min-h-screen ${theme.bgGradient} p-8 relative`}>
+   return (
+    <div className={`min-h-screen ${theme.bgGradient} relative`}>
       {albumImage && (
         <div 
           className="absolute inset-0 opacity-20 pointer-events-none"
@@ -755,32 +755,89 @@ const TaylorSwiftRanker = () => {
           }}
         />
       )}
-      <div className="max-w-2xl mx-auto relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-8">
+      
+      {/* Fixed mobile button bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
+        <div className="p-2 flex items-center justify-between gap-1">
           <button
             onClick={() => setView('albums')}
-            className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
+            className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+          >
+            <span className="text-lg">←</span>
+          </button>
+          
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setShowRankingsList(!showRankingsList)}
+              className={`flex items-center gap-1 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 py-2 rounded-lg transition`}
+              title="My rankings"
+            >
+              <List size={16} />
+              <span className="text-xs">{savedRankings.length}</span>
+            </button>
+            
+            <button
+              onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
+              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+              title="Customize"
+            >
+              <Settings2 size={16} />
+            </button>
+            
+            <button
+              onClick={saveRanking}
+              className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
+              title="Save"
+            >
+              <Save size={16} />
+            </button>
+            
+            <button
+              onClick={() => setShowShareView(true)}
+              className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
+              title="Share"
+            >
+              <Share2 size={16} />
+            </button>
+            
+            <button
+              onClick={handleSignOut}
+              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+              title="Sign Out"
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-2xl mx-auto relative z-10 p-8 pt-20 md:pt-8">
+        {/* Desktop header */}
+        <div className="hidden md:flex flex-row justify-between items-center gap-4 mb-8">
+          <button
+            onClick={() => setView('albums')}
+            className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
           >
             <span>←</span>
-            <span className="hidden sm:inline">Back to Albums</span>
+            <span>Back to Albums</span>
           </button>
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setShowRankingsList(!showRankingsList)}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
               <List size={16} />
-              <span className="text-xs sm:text-sm">{savedRankings.length}</span>
+              <span className="text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
               <button
                 onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
-                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
+                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Customize"
               >
                 <Settings2 size={16} />
-                               <span className="hidden sm:inline">Customize</span>
+                <span>Customize</span>
               </button>
               {showCustomizeMenu && (
                 <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
@@ -821,14 +878,14 @@ const TaylorSwiftRanker = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
             >
               <LogOut size={16} />
-              <span className="hidden sm:inline">Sign Out</span>
+              <span>Sign Out</span>
             </button>
           </div>
         </div>
-
+        
         <input
           type="file"
           ref={fileInputRef}
@@ -1029,10 +1086,10 @@ const TaylorSwiftRanker = () => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 md:block hidden">
           <button
             onClick={saveRanking}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-2 transition"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-2 transition mr-4"
           >
             <Save size={18} />
             Save Ranking
