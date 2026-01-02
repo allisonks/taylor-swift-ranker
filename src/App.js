@@ -762,7 +762,9 @@ const TaylorSwiftRanker = () => {
           <button
             onClick={() => setView('albums')}
             className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+            title="Back to Main"
           >
+          <size={16} />
             <span className="text-lg">←</span>
           </button>
           
@@ -827,7 +829,7 @@ const TaylorSwiftRanker = () => {
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
-              <List size={16} />
+              <List size={18} />
               <span className="text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
@@ -885,7 +887,7 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
         </div>
-        
+
         <input
           type="file"
           ref={fileInputRef}
