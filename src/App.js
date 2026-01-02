@@ -759,7 +759,7 @@ const TaylorSwiftRanker = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-8">
           <button
             onClick={() => setView('albums')}
-            className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition text-sm sm:text-base`}
+            className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
           >
             <span>←</span>
             <span className="hidden sm:inline">Back to Albums</span>
