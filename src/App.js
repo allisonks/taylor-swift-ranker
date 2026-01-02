@@ -689,8 +689,18 @@ const TaylorSwiftRanker = () => {
 
   if (showShareView) {
     return (
-      <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center`}>
-        <div className="max-w-2xl w-full">
+     <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center relative`}>
+        {albumImage && (
+          <div 
+            className="absolute inset-0 opacity-20 pointer-events-none"
+            style={{
+              backgroundImage: `url(${albumImage})`,
+              backgroundSize: '200px 200px',
+              backgroundRepeat: 'repeat'
+            }}
+          />
+        )}
+        <div className="max-w-2xl w-full relative z-10">
           <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`}>
             {albumImage && (
               <div className="flex justify-center mb-6">
@@ -828,7 +838,7 @@ const TaylorSwiftRanker = () => {
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
-              <List size={18} />
+              <List size={16} />
               <span className="text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
