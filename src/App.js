@@ -756,30 +756,31 @@ const TaylorSwiftRanker = () => {
         />
       )}
       <div className="max-w-2xl mx-auto relative z-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 sm:mb-8">
           <button
             onClick={() => setView('albums')}
-            className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition`}
+            className={`${theme.textSecondary} hover:${theme.textPrimary} flex items-center gap-2 transition text-sm sm:text-base`}
           >
-            ← Back to Main
+            <span>←</span>
+            <span className="hidden sm:inline">Back to Albums</span>
           </button>
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setShowRankingsList(!showRankingsList)}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
               title="My rankings"
             >
-              <List size={18} />
-              <span className="text-sm">{savedRankings.length}</span>
+              <List size={16} />
+              <span className="text-xs sm:text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
               <button
                 onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
-                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+                className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
                 title="Customize"
               >
-                <Settings2 size={18} />
-                <span className="hidden sm:inline">Customize</span>
+                <Settings2 size={16} />
+                               <span className="hidden sm:inline">Customize</span>
               </button>
               {showCustomizeMenu && (
                 <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
@@ -820,9 +821,9 @@ const TaylorSwiftRanker = () => {
             </div>
             <button
               onClick={handleSignOut}
-              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 sm:px-4 py-2 rounded-lg transition text-sm sm:text-base`}
+              className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition text-sm sm:text-base`}
             >
-            <LogOut size={18} />
+              <LogOut size={16} />
               <span className="hidden sm:inline">Sign Out</span>
             </button>
           </div>
@@ -946,8 +947,8 @@ const TaylorSwiftRanker = () => {
           </div>
         )}
 
-<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl mb-6 overflow-hidden">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-4">
+<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-3 sm:p-6 shadow-2xl mb-4 sm:mb-6 overflow-hidden">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-3 sm:mb-4">
             <div className="flex items-center gap-4 flex-wrap">
 
                           {hasBonusTracks && (
@@ -975,8 +976,8 @@ const TaylorSwiftRanker = () => {
             </button>
           </div>
           
-<div className="md:px-0 -mx-4 px-4 md:mx-0">
-            <div className="space-y-3 md:px-0 px-4">
+          <div className="md:px-0 -mx-3 px-3 md:mx-0">
+            <div className="space-y-2 sm:space-y-3 md:px-0 px-3">
             {songs.map((song, index) => {
               const songTitle = song.title || song;
               const trackInfo = song.track_number ? 
@@ -987,60 +988,60 @@ const TaylorSwiftRanker = () => {
                 <div
                   key={`${songTitle}-${index}`}
                   data-song-index={index}
-                draggable
-                onDragStart={(e) => handleDragStart(e, index)}
-                onDragEnter={(e) => handleDragEnter(e, index)}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onDragEnd={handleDragEnd}
-onTouchStart={(e) => handleTouchStart(e, index)}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragEnd={handleDragEnd}
+                  onTouchStart={(e) => handleTouchStart(e, index)}
                   onTouchMove={(e) => handleTouchMove(e, index)}
                   onTouchEnd={handleTouchEnd}
                   style={{ touchAction: 'none' }}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-3 sm:p-4 flex items-center gap-2 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
-                  draggedItem === index ? 'opacity-50 scale-95' : ''
-                }`}
-              >
-                <GripVertical className={theme.textSecondary} size={20} />
-                  <div className={`text-xl sm:text-2xl font-bold ${theme.textPrimary} w-8 sm:w-12 text-center flex-shrink-0`}>
-                  {index + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                    <div className={`text-base sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-1.5 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
+                    draggedItem === index ? 'opacity-50 scale-95' : ''
+                  }`}
+                >
+                  <GripVertical className={theme.textSecondary} size={16} />
+                  <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center flex-shrink-0`}>
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-sm sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
                     {trackInfo && (
-                      <div className={`text-xs ${theme.textSecondary} mt-1`}>{trackInfo}</div>
+                      <div className={`text-xs ${theme.textSecondary} mt-0.5 sm:mt-1 truncate sm:whitespace-normal`}>{trackInfo}</div>
                     )}
                   </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSong(index);
-                  }}
-                  className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
-                  title="Remove track"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-            );
-          })}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSong(index);
+                    }}
+                    className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
+                    title="Remove track"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
           </div>
         </div>
 
-       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
           <button
             onClick={saveRanking}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-2 transition"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-2 transition"
           >
-            <Save size={20} />
+            <Save size={18} />
             Save Ranking
           </button>
           <button
             onClick={() => setShowShareView(true)}
-            className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg flex items-center justify-center gap-3 shadow-lg transition"
+            className="flex-1 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-2.5 sm:py-4 rounded-xl font-bold text-sm sm:text-lg flex items-center justify-center gap-3 shadow-lg transition"
           >
-            <Share2 size={20} />
+            <Share2 size={18} />
             Share
           </button>
         </div>
