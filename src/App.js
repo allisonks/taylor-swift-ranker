@@ -799,7 +799,7 @@ const TaylorSwiftRanker = () => {
    return (
     <div className={`min-h-screen ${theme.bgGradient} relative`}>
       {albumImage && (
-        <div 
+      <div 
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage: `url(${albumImage})`,
@@ -905,7 +905,10 @@ const TaylorSwiftRanker = () => {
             </button>
             
             <div className="space-y-1 max-h-60 overflow-y-auto">
-              {allAvailableTracks.map((track, index) => {
+              {allAvailableTracks.length === 0 ? (
+                <p className="text-sm text-gray-500 p-2">No tracks available</p>
+              ) : (
+                allAvailableTracks.map((track, index) => {
                 const trackTitle = track.title || track;
                 const isVisible = visibleTrackTitles.has(trackTitle);
                 
@@ -920,7 +923,8 @@ const TaylorSwiftRanker = () => {
                     <span className="text-sm text-gray-800">{trackTitle}</span>
                   </label>
                 );
-              })}
+ })
+              )}
             </div>
           </div>
         )}
@@ -1053,7 +1057,10 @@ const TaylorSwiftRanker = () => {
                   </button>
                   
                   <div className="space-y-1 max-h-60 overflow-y-auto">
-                    {allAvailableTracks.map((track, index) => {
+                   {allAvailableTracks.length === 0 ? (
+                      <p className="text-sm text-gray-500 p-2">No tracks available</p>
+                    ) : (
+                      allAvailableTracks.map((track, index) => {
                       const trackTitle = track.title || track;
                       const isVisible = visibleTrackTitles.has(trackTitle);
                       
@@ -1068,7 +1075,8 @@ const TaylorSwiftRanker = () => {
                           <span className="text-sm text-gray-800">{trackTitle}</span>
                         </label>
                       );
-                    })}
+                    })
+                    )}
                   </div>
                 </div>
               )}
