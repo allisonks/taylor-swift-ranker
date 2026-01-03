@@ -2,83 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
-const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1Y3JqYmNvbW1ubGhqenV4Ym5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MTE4MDQsImV4cCI6MjA4MjA4NzgwNH0.92JTyHbyGcMs-jcX0CCDVchBeXVuFPMIdQ-vI8KvJkw';
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
+const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-const COLOR_THEMES = {
-  torturedPoets: {
-    name: 'Tortured Poets',
-    bgGradient: 'bg-gradient-to-b from-stone-400 to-orange-50',
-    textPrimary: 'text-stone-900',
-    textSecondary: 'text-yellow-950'
-  },
-  midnights: {
-    name: 'Midnights',
-    bgGradient: 'bg-gradient-to-b from-blue-900 to-cyan-800',
-    textPrimary: 'text-sky-50',
-    textSecondary: 'text-purple-50'
-  },
-  folklore: {
-    name: 'Folklore',
-    bgGradient: 'bg-gradient-to-b from-neutral-500 to-stone-200',
-    textPrimary: 'text-black',
-    textSecondary: 'text-gray-900'
-  },
-  evermore: {
-    name: 'Evermore',
-    bgGradient: 'bg-gradient-to-b from-amber-700 to-stone-500',
-    textPrimary: 'text-amber-50',
-    textSecondary: 'text-amber-100'
-  },
-  lover: {
-    name: 'Lover',
-    bgGradient: 'bg-gradient-to-b from-pink-300 to-blue-300',
-    textPrimary: 'text-purple-950',
-    textSecondary: 'text-fuscia-950'
-  },
-  reputation: {
-    name: 'Reputation',
-    bgGradient: 'bg-gradient-to-b from-neutral-900 to-green-950',
-    textPrimary: 'text-stone-50',
-    textSecondary: 'text-red-500'
-  },
-  red: {
-    name: 'Red',
-    bgGradient: 'bg-gradient-to-b from-red-700 to-orange-900',
-    textPrimary: 'text-white',
-    textSecondary: 'text-red-200'
-  },
-  nineteen89: {
-    name: '1989',
-    bgGradient: 'bg-gradient-to-b from-sky-300 to-orange-50',
-    textPrimary: 'text-gray-900',
-    textSecondary: 'text-blue-900'
-  },
-  showgirl: {
-    name: 'Showgirl',
-    bgGradient: 'bg-gradient-to-b from-teal-600 to-orange-500',
-    textPrimary: 'text-white',
-    textSecondary: 'text-zinc-100'
-  },
-  speaknow: {
-    name: 'Speak Now',
-    bgGradient: 'bg-gradient-to-b from-purple-700 to-pink-800',
-    textPrimary: 'text-white',
-    textSecondary: 'text-orange-50'
-  },
-  fearless: {
-    name: "Fearless",
-    bgGradient: 'bg-gradient-to-b from-yellow-300 to-amber-700',
-    textPrimary: 'text-black',
-    textSecondary: 'text-amber-950'
-  },
-  debut: {
-    name: 'Debut',
-    bgGradient: 'bg-gradient-to-b from-emerald-600 to-cyan-400',
-    textPrimary: 'text-white',
-    textSecondary: 'text-pink-50'
-  }
-};
+
+import { COLOR_THEMES } from './constants/themes';
+
 
 class SupabaseClient {
   constructor(url, key) {
@@ -1081,7 +1010,7 @@ allAvailableTracks.map((track, index) => {
                             onChange={() => toggleTrackVisibility(track)}
                             className="mt-1 w-4 h-4 rounded flex-shrink-0"
                           />
-                         <span className="text-sm text-gray-800">{trackNumber}.{trackTitle}</span>
+                         <span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
                         </label>
                       );
                     })
