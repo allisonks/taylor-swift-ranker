@@ -1253,11 +1253,10 @@ allAvailableTracks.map((track, index) => {
                   onTouchMove={(e) => handleTouchMove(e)}
                   onTouchEnd={handleTouchEnd}
                   style={{ touchAction: 'none' }}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-1.5 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-2 sm:gap-3 cursor-move transition-all hover:bg-opacity-30 select-none ${
                     draggedItem === index ? 'opacity-50 scale-95' : ''
                   }`}
                 >
-                  <GripVertical className={theme.textSecondary} size={16} />
                   <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center flex-shrink-0`}>
                     {index + 1}
                   </div>
