@@ -539,43 +539,47 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
   };
   
   const handleTouchStart = (e, index) => {
-        const touch = e.touches[0];
-    setDraggedItem(index);
-    setTouchStartY(touch.clientY);
-  };
+  setDraggedItem(index);
+  setTouchStartY(e.touches[0].clientY);
+};
 
-  const handleTouchMove = (e, index) => {
-    if (draggedItem === null) return;
-    
-    const touch = e.touches[0];
-    const touchY = touch.clientY;
-    
-    // Find which element we're hovering over
-    const elements = document.elementsFromPoint(touch.clientX, touchY);
-    const songCards = Array.from(document.querySelectorAll('[data-song-index]'));
-    
-    for (const element of elements) {
-      const targetIndex = element.getAttribute('data-song-index');
-      if (targetIndex !== null && parseInt(targetIndex) !== draggedItem) {
-        const newIndex = parseInt(targetIndex);
-        
-        const newSongs = [...songs];
-        const draggedSong = newSongs[draggedItem];
-        
-        newSongs.splice(draggedItem, 1);
-        newSongs.splice(newIndex, 0, draggedSong);
-        
-        setSongs(newSongs);
-        setDraggedItem(newIndex);
-        break;
-      }
+const handleTouchMove = (e, index) => {
+  if (draggedItem === null) return;
+  
+  e.preventDefault(); // Prevent scrolling while dragging
+  
+  const touch = e.touches[0];
+  const touchY = touch.clientY;
+  
+  // Get all song items
+  const songItems = document.querySelectorAll('[data-song-index]');
+  
+  // Find which item we're over
+  let targetIndex = null;
+  songItems.forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    if (touchY >= rect.top && touchY <= rect.bottom) {
+      targetIndex = parseInt(item.getAttribute('data-song-index'));
     }
-  };
+  });
+  
+  // Only reorder if we found a valid target and it's different from current
+  if (targetIndex !== null && targetIndex !== draggedItem) {
+    const newSongs = [...songs];
+    const draggedSong = newSongs[draggedItem];
+    
+    newSongs.splice(draggedItem, 1);
+    newSongs.splice(targetIndex, 0, draggedSong);
+    
+    setSongs(newSongs);
+    setDraggedItem(targetIndex);
+  }
+};
 
-  const handleTouchEnd = () => {
-    setDraggedItem(null);
-    setTouchStartY(null);
-    setTouchCurrentY(null);
+const handleTouchEnd = () => {
+  setDraggedItem(null);
+  setTouchStartY(null);
+};
   };
 
   const handleImageUpload = (e) => {
