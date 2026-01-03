@@ -748,71 +748,149 @@ const handleTouchEnd = () => {
     );
   }
 
-  if (showShareView) {
-    return (
-     <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center relative`}>
-        {albumImage && (
-          <div 
-            className="absolute inset-0 opacity-20 pointer-events-none"
-            style={{
-              backgroundImage: `url(${albumImage})`,
-              backgroundSize: '200px 200px',
-              backgroundRepeat: 'repeat'
-            }}
-          />
-        )}
-        <div className="max-w-2xl w-full relative z-10">
-          <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`}>
-            {albumImage && (
-              <div className="flex justify-center mb-6">
-                <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
-              </div>
-            )}
-            <h1 className="text-4xl font-bold text-white text-center mb-2">
-              {rankingName || 'My Ranking'}
-            </h1>
-            <h2 className="text-xl text-purple-200 text-center mb-8">
-              {selectedAlbum.name}
-            </h2>
-            
-            <div className="space-y-3">
-              {songs.map((song, index) => (
+if (showShareView) {
+  const shareUrl = 'taylor-swift-ranker.vercel.app'; // Replace with your actual app URL
+  const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+  
+  const shareToTwitter = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+      '_blank',
+      'width=550,height=420'
+    );
+  };
+  
+  const shareToFacebook = () => {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+      '_blank',
+      'width=550,height=420'
+    );
+  };
+  
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setMessage('Link copied to clipboard!');
+      setTimeout(() => setMessage(''), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+  
+  return (
+    <div className={`min-h-screen ${theme.bgGradient} p-8 flex items-center justify-center relative`}>
+      {albumImage && (
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `url(${albumImage})`,
+            backgroundSize: '200px 200px',
+            backgroundRepeat: 'repeat'
+          }}
+        />
+      )}
+      <div className="max-w-2xl w-full relative z-10">
+        <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`}>
+          {albumImage && (
+            <div className="flex justify-center mb-6">
+              <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
+            </div>
+          )}
+          <h1 className="text-4xl font-bold text-white text-center mb-2">
+            {rankingName || 'My Ranking'}
+          </h1>
+          <h2 className="text-xl text-purple-200 text-center mb-8">
+            {selectedAlbum.name}
+          </h2>
+          
+          <div className="space-y-3">
+            {songs.map((song, index) => {
+              const songTitle = song.title || song;
+              return (
                 <div
-                  key={song}
+                  key={index}
                   className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4"
                 >
                   <div className="text-3xl font-bold text-white w-12 text-center">
                     {index + 1}
                   </div>
-                  <div className="text-lg text-white flex-1">{song}</div>
+                  <div className="text-lg text-white flex-1">{songTitle}</div>
                 </div>
-              ))}
-            </div>
-            
-            <div className="mt-6 text-center text-purple-200 text-sm">
-              Made with Album Ranker
-            </div>
+              );
+            })}
           </div>
           
-          <div className="mt-6 flex gap-4 justify-center">
-            <button
-              onClick={downloadAsImage}
-              className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition"
-            >
-              <Download size={20} />
-              Download Image
-            </button>
-            <button
-              onClick={() => setShowShareView(false)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition"
-            >
-              Back to Ranking
-            </button>
+          <div className="mt-6 text-center text-purple-200 text-sm">
+            Made with TAS Songlist
           </div>
         </div>
+        
+        <div className="mt-6 space-y-4">
+          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6">
+            <h3 className="text-white font-bold text-lg mb-4 text-center">Share Your Ranking</h3>
+            
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <button
+                onClick={shareToTwitter}
+                className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Twitter/X
+              </button>
+              
+              <button
+                onClick={shareToFacebook}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+              </button>
+              
+              <button
+                onClick={copyToClipboard}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Copy Link
+              </button>
+              
+              <button
+                onClick={downloadAsImage}
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+              >
+                <Download size={20} />
+                Download
+              </button>
+            </div>
+            
+            <div className="bg-white bg-opacity-10 rounded-lg p-3 mb-3">
+              <p className="text-purple-100 text-sm mb-2 font-semibold">Share message:</p>
+              <p className="text-white text-sm">{shareText}</p>
+            </div>
+            
+            <p className="text-purple-200 text-xs text-center">
+              Note: For Instagram, download the image and share it from your camera roll
+            </p>
+          </div>
+          
+          <button
+            onClick={() => setShowShareView(false)}
+            className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-lg font-semibold transition"
+          >
+            Back to Ranking
+          </button>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
    return (
     <div className={`min-h-screen ${theme.bgGradient} relative`}>
@@ -1153,7 +1231,7 @@ allAvailableTracks.map((track, index) => {
     selectAlbum(album);
     setTimeout(() => loadSavedRanking(ranking, album), 100);
   }}
-  className={`${albumThemeColors.textPrimary} text-left flex-1 font-semibold`}
+  className={`${albumThemeColors.textPrimary} text-left flex-1`}
 >
   {ranking.ranking_name || 'Untitled Ranking'}
 </button>
