@@ -348,6 +348,11 @@ const TaylorSwiftRanker = () => {
     setRankingName(`My Favorite ${album.name} Tracks`);
     setCurrentRankingId(null);
     setIsEditingTitle(false);
+
+    // Initialize allAvailableTracks and visibleTrackTitles
+const allTracks = [...baseSongs, ...bonusSongs];
+setAllAvailableTracks(allTracks);
+setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
     
     setCurrentTheme(getAlbumTheme(album.name));
     
