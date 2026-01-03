@@ -355,20 +355,22 @@ const TaylorSwiftRanker = () => {
     setView('ranking');
   };
 
-  const loadSavedRanking = (ranking) => {
+  const loadSavedRanking = (ranking, album = selectedAlbum) => {
     setSongs(ranking.ranked_songs);
     setRankingName(ranking.ranking_name || '');
     setCurrentRankingId(ranking.id);
     setShowRankingsList(false);
     
     // Update visible tracks based on loaded ranking
-    const baseSongs = selectedAlbum.songs_detailed || selectedAlbum.songs.map(title => ({ title }));
-    const bonusSongs = selectedAlbum.bonus_songs_detailed || (selectedAlbum.bonus_songs || []).map(title => ({ title }));
-    const allTracks = [...baseSongs, ...bonusSongs];
-    
-    setAllAvailableTracks(allTracks);
-    setVisibleTrackTitles(new Set(ranking.ranked_songs.map(s => s.title || s)));
-    
+     if (album) {
+      const baseSongs = album.songs_detailed || album.songs.map(title => ({ title }));
+      const bonusSongs = album.bonus_songs_detailed || (album.bonus_songs || []).map(title => ({ title }));
+      const allTracks = [...baseSongs, ...bonusSongs];
+      
+      setAllAvailableTracks(allTracks);
+      setVisibleTrackTitles(new Set(ranking.ranked_songs.map(s => s.title || s)));
+    }
+
     setMessage('Ranking loaded!');
     setTimeout(() => setMessage(''), 2000);
   };
@@ -709,7 +711,7 @@ const TaylorSwiftRanker = () => {
                         key={ranking.id}
                         onClick={() => {
                           selectAlbum(album);
-                          setTimeout(() => loadSavedRanking(ranking), 100);
+                         setTimeout(() => loadSavedRanking(ranking, album), 100);
                         }}
                         className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
                       >
