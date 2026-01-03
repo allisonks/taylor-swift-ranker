@@ -1146,18 +1146,17 @@ allAvailableTracks.map((track, index) => {
           return (
             <div
               key={ranking.id}
-              className={`${albumThemeColors.bgGradient} rounded-lg p-3 flex justify-between items-center`}
+              className={`${albumThemeColors.bgGradient} rounded-lg p-2 flex justify-between items-center`}
             >
               <button
-                onClick={() => {
-                  selectAlbum(album);
-                  setTimeout(() => loadSavedRanking(ranking, album), 100);
-                }}
-                className={`${albumThemeColors.textPrimary} text-left flex-1`}
-              >
-                <div className="font-semibold">{ranking.ranking_name || 'Untitled Ranking'}</div>
-                <div className={`${albumThemeColors.textSecondary} text-xs mt-1`}>{album.name}</div>
-              </button>
+  onClick={() => {
+    selectAlbum(album);
+    setTimeout(() => loadSavedRanking(ranking, album), 100);
+  }}
+  className={`${albumThemeColors.textPrimary} text-left flex-1 font-semibold`}
+>
+  {ranking.ranking_name || 'Untitled Ranking'}
+</button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
