@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2 } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2, Folder } from 'lucide-react';
 import html2canvas from 'html2canvas';
 
 const SUPABASE_URL = 'https://tucrjbcommnlhjzuxbnr.supabase.co';
@@ -833,7 +833,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
               className={`flex items-center gap-1 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 py-2 rounded-lg transition`}
               title="My rankings"
             >
-              <List size={16} />
+              <Folder size={16} />
               <span className="text-xs">{savedRankings.length}</span>
             </button>
             
@@ -866,7 +866,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
               className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
               title="Manage Tracks"
             >
-              <Music2 size={16} />
+              <List size={16} />
             </button>
             
             <button
@@ -954,7 +954,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
-              <List size={16} />
+              <Folder size={16} />
               <span className="text-sm">{savedRankings.length}</span>
             </button>
             <div className="relative">
@@ -1028,7 +1028,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
                 className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Manage Tracks"
               >
-                <Music2 size={16} />
+                <List size={16} />
                 <span>Tracks</span>
               </button>
               
