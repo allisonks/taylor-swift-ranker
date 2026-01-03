@@ -1107,6 +1107,7 @@ if (showShareView) {
       
       <button
         onClick={() => {
+          downloadAsImage();
           setShowShareMenu(false);
         }}
         className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
@@ -1274,6 +1275,7 @@ if (showShareView) {
         
         <button
           onClick={() => {
+            downloadAsImage();
             setShowShareMenu(false);
           }}
           className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
