@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
+import { COLOR_THEMES } from './constants/themes';
 
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUPABASE_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 
-import { COLOR_THEMES } from './constants/themes';
 
 
 class SupabaseClient {
