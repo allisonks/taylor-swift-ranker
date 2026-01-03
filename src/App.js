@@ -225,11 +225,12 @@ const TaylorSwiftRanker = () => {
   const [includeBonusTracks, setIncludeBonusTracks] = useState(false);
   const [hasBonusTracks, setHasBonusTracks] = useState(false);
   const [showCustomizeMenu, setShowCustomizeMenu] = useState(false);
-    const [showTracksMenu, setShowTracksMenu] = useState(false);
+  const [showTracksMenu, setShowTracksMenu] = useState(false);
   const [allAvailableTracks, setAllAvailableTracks] = useState([]);
   const [visibleTrackTitles, setVisibleTrackTitles] = useState(new Set());
   const [touchStartY, setTouchStartY] = useState(null);
   const [touchCurrentY, setTouchCurrentY] = useState(null);
+  const [showShareMenu, setShowShareMenu] = useState(false);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -957,15 +958,12 @@ if (showShareView) {
             </button>
             
             <button
-  onClick={() => {
-    setShowShareView(true);
-    window.history.pushState({ view: 'share' }, '', '');
-  }}
-              className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
-              title="Share"
-            >
-              <Share2 size={16} />
-            </button>
+  onClick={() => setShowShareMenu(!showShareMenu)}
+  className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
+  title="Share"
+>
+  <Share2 size={16} />
+</button>
                         
             <button
               onClick={() => setShowTracksMenu(!showTracksMenu)}
@@ -1039,6 +1037,87 @@ if (showShareView) {
                 );
  })
               )}
+              {showShareMenu && (
+  <div className="fixed top-14 right-2 w-72 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+    <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
+    
+    <div className="space-y-2">
+      <button
+        onClick={() => {
+          const shareUrl = window.location.origin;
+          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+          window.open(
+            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+            '_blank',
+            'width=550,height=420'
+          );
+          setShowShareMenu(false);
+        }}
+        className="w-full bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 border border-gray-700"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        Share on Twitter/X
+      </button>
+      
+      <button
+        onClick={() => {
+          const shareUrl = window.location.origin;
+          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+            '_blank',
+            'width=550,height=420'
+          );
+          setShowShareMenu(false);
+        }}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+        Share on Facebook
+      </button>
+      
+      <button
+        onClick={async () => {
+          const shareUrl = window.location.origin;
+          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+          try {
+            await navigator.clipboard.writeText(shareText);
+            setMessage('✓ Link copied to clipboard!');
+            setTimeout(() => setMessage(''), 2000);
+            setShowShareMenu(false);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+          }
+        }}
+        className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        Copy Link
+      </button>
+      
+      <button
+        onClick={() => {
+          setShowShareView(true);
+          setShowShareMenu(false);
+        }}
+        className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+      >
+        <Download size={20} />
+        Download as Image
+      </button>
+    </div>
+    
+    <p className="text-gray-600 text-xs text-center mt-3">
+      For Instagram, download the image and share from your camera roll
+    </p>
+  </div>
+)}
             </div>
           </div>
         )}
@@ -1119,17 +1198,98 @@ if (showShareView) {
               <span>Save</span>
             </button>
             
-            <button
-  onClick={() => {
-    setShowShareView(true);
-    window.history.pushState({ view: 'share' }, '', '');
-  }}
-              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition"
-              title="Share"
-            >
-              <Share2 size={16} />
-              <span>Share</span>
-            </button>
+            <div className="relative">
+  <button
+    onClick={() => setShowShareMenu(!showShareMenu)}
+    className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition"
+    title="Share"
+  >
+    <Share2 size={16} />
+    <span>Share</span>
+  </button>
+  
+  {showShareMenu && (
+    <div className="absolute right-0 top-12 w-80 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+      <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
+      
+      <div className="space-y-2">
+        <button
+          onClick={() => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            window.open(
+              `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 border border-gray-700"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Share on Twitter/X
+        </button>
+        
+        <button
+          onClick={() => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          Share on Facebook
+        </button>
+        
+        <button
+          onClick={async () => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            try {
+              await navigator.clipboard.writeText(shareText);
+              setMessage('✓ Link copied to clipboard!');
+              setTimeout(() => setMessage(''), 2000);
+              setShowShareMenu(false);
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+          }}
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          Copy Link
+        </button>
+        
+        <button
+          onClick={() => {
+            setShowShareView(true);
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <Download size={20} />
+          Download as Image
+        </button>
+      </div>
+      
+      <p className="text-gray-600 text-xs text-center mt-3">
+        For Instagram, download the image and share from your camera roll
+      </p>
+    </div>
+  )}
+</div>
                         
             <div className="relative">
               <button
