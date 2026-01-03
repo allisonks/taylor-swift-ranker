@@ -1121,45 +1121,60 @@ allAvailableTracks.map((track, index) => {
         />
 
         {showRankingsList && (
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
+  <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
+    <div className="flex justify-between items-center mb-3">
+      <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
+      <button
+        onClick={createNewRanking}
+        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm transition"
+      >
+        <Plus size={16} />
+        New
+      </button>
+    </div>
+    {allRankings.length === 0 ? (
+      <p className={`${theme.textSecondary} text-sm`}>No saved rankings yet. Create your first one!</p>
+    ) : (
+      <div className="space-y-2">
+        {allRankings.map((ranking) => {
+          const album = albums.find(a => a.id === ranking.album_id);
+          if (!album) return null;
+          
+          const albumTheme = getAlbumTheme(album.name);
+          const albumThemeColors = COLOR_THEMES[albumTheme];
+          
+          return (
+            <div
+              key={ranking.id}
+              className={`${albumThemeColors.bgGradient} rounded-lg p-3 flex justify-between items-center`}
+            >
               <button
-                onClick={createNewRanking}
-                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm transition"
+                onClick={() => {
+                  selectAlbum(album);
+                  setTimeout(() => loadSavedRanking(ranking, album), 100);
+                }}
+                className={`${albumThemeColors.textPrimary} text-left flex-1`}
               >
-                <Plus size={16} />
-                New
+                <div className="font-semibold">{ranking.ranking_name || 'Untitled Ranking'}</div>
+                <div className={`${albumThemeColors.textSecondary} text-xs mt-1`}>{album.name}</div>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteRanking(ranking.id);
+                }}
+                className="text-red-300 hover:text-red-500 ml-2"
+                title="Delete ranking"
+              >
+                <Trash2 size={16} />
               </button>
             </div>
-            {savedRankings.length === 0 ? (
-              <p className={`${theme.textSecondary} text-sm`}>No saved rankings yet. Create your first one!</p>
-            ) : (
-              <div className="space-y-2">
-                {savedRankings.map((ranking) => (
-                  <div
-                    key={ranking.id}
-                    className="bg-white bg-opacity-10 rounded-lg p-3 flex justify-between items-center"
-                  >
-                    <button
-                      onClick={() => loadSavedRanking(ranking)}
-                      className={`${theme.textPrimary} hover:${theme.textSecondary} text-left flex-1`}
-                    >
-                      {ranking.ranking_name || 'Untitled Ranking'}
-                    </button>
-                    <button
-                      onClick={() => deleteRanking(ranking.id)}
-                      className="text-red-300 hover:text-red-500 ml-2"
-                      title="Delete ranking"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          );
+        })}
+      </div>
+    )}
+  </div>
+)}
 
         {showThemeSelector && (
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
