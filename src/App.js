@@ -543,7 +543,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
   setTouchStartY(e.touches[0].clientY);
 };
 
-const handleTouchMove = (e, index) => {
+const handleTouchMove = (e) => {
   if (draggedItem === null) return;
   
   e.preventDefault(); // Prevent scrolling while dragging
@@ -552,19 +552,27 @@ const handleTouchMove = (e, index) => {
   const touchY = touch.clientY;
   
   // Get all song items
-  const songItems = document.querySelectorAll('[data-song-index]');
+  const songItems = Array.from(document.querySelectorAll('[data-song-index]'));
   
-  // Find which item we're over
+  // Find which item we're over based on center point
   let targetIndex = null;
-  songItems.forEach((item) => {
-    const rect = item.getBoundingClientRect();
-    if (touchY >= rect.top && touchY <= rect.bottom) {
-      targetIndex = parseInt(item.getAttribute('data-song-index'));
+  for (let i = 0; i < songItems.length; i++) {
+    const rect = songItems[i].getBoundingClientRect();
+    const itemCenter = rect.top + (rect.height / 2);
+    
+    if (touchY < itemCenter) {
+      targetIndex = i;
+      break;
     }
-  });
+  }
   
-  // Only reorder if we found a valid target and it's different from current
-  if (targetIndex !== null && targetIndex !== draggedItem) {
+  // If we're past all items, put at end
+  if (targetIndex === null) {
+    targetIndex = songItems.length - 1;
+  }
+  
+  // Only reorder if different from current position
+  if (targetIndex !== draggedItem) {
     const newSongs = [...songs];
     const draggedSong = newSongs[draggedItem];
     
@@ -1242,7 +1250,7 @@ allAvailableTracks.map((track, index) => {
                   onDrop={handleDrop}
                   onDragEnd={handleDragEnd}
                   onTouchStart={(e) => handleTouchStart(e, index)}
-                  onTouchMove={(e) => handleTouchMove(e, index)}
+                  onTouchMove={(e) => handleTouchMove(e)}
                   onTouchEnd={handleTouchEnd}
                   style={{ touchAction: 'none' }}
                   className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-1.5 sm:gap-4 cursor-move transition-all hover:bg-opacity-30 select-none ${
