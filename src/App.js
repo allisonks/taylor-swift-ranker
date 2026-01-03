@@ -1037,7 +1037,11 @@ if (showShareView) {
                 );
  })
               )}
-              {showShareMenu && (
+              
+            </div>
+          </div>
+        )}
+        {showShareMenu && (
   <div className="fixed top-14 right-2 w-72 max-w-[calc(100vw-1rem)] bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-[60] p-4">
     <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
     
@@ -1117,9 +1121,6 @@ if (showShareView) {
     </p>
   </div>
 )}
-            </div>
-          </div>
-        )}
       </div>
       
       <div className="max-w-2xl mx-auto relative z-10 p-8 pt-20 md:pt-8">
