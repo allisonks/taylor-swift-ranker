@@ -920,8 +920,7 @@ if (showShareView) {
         />
       )}
       
-      {/* Fixed mobile button bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
+        <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
         <div className="p-2 flex items-center justify-between gap-1">
           <button
             onClick={() => setView('albums')}
@@ -933,7 +932,10 @@ if (showShareView) {
           
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setShowRankingsList(!showRankingsList)}
+              onClick={() => { setShowRankingsList(!showRankingsList);
+                setShowCustomizeMenu(false);
+                 setShowShareMenu(false);
+               setShowTracksMenu(false);}}
               className={`flex items-center gap-1 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 py-2 rounded-lg transition`}
               title="My rankings"
             >
@@ -942,7 +944,12 @@ if (showShareView) {
             </button>
             
             <button
-              onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
+              onClick={() => {
+  setShowCustomizeMenu(!showCustomizeMenu);
+  setShowRankingsList(false);
+  setShowShareMenu(false);
+  setShowTracksMenu(false);
+}}
               className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
               title="Customize"
             >
@@ -958,7 +965,12 @@ if (showShareView) {
             </button>
             
             <button
-  onClick={() => setShowShareMenu(!showShareMenu)}
+  onClick={() => {
+  setShowShareMenu(!showShareMenu);
+  setShowRankingsList(false);
+  setShowCustomizeMenu(false);
+  setShowTracksMenu(false);
+}}
   className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
   title="Share"
 >
@@ -966,7 +978,12 @@ if (showShareView) {
 </button>
                         
             <button
-              onClick={() => setShowTracksMenu(!showTracksMenu)}
+              onClick={() => {
+  setShowTracksMenu(!showTracksMenu);
+  setShowRankingsList(false);
+  setShowCustomizeMenu(false);
+  setShowShareMenu(false);
+}}
               className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
               title="Manage Tracks"
             >
@@ -1136,7 +1153,12 @@ if (showShareView) {
           </button>
           <div className="flex items-center gap-2 flex-wrap">
             <button
-              onClick={() => setShowRankingsList(!showRankingsList)}
+              onClick={() => {
+  setShowRankingsList(!showRankingsList);
+  setShowCustomizeMenu(false);
+  setShowShareMenu(false);
+  setShowTracksMenu(false);
+}}
               className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
               title="My rankings"
             >
@@ -1145,7 +1167,12 @@ if (showShareView) {
             </button>
             <div className="relative">
               <button
-                onClick={() => setShowCustomizeMenu(!showCustomizeMenu)}
+                onClick={() => {
+  setShowCustomizeMenu(!showCustomizeMenu);
+  setShowRankingsList(false);
+  setShowShareMenu(false);
+  setShowTracksMenu(false);
+}}
                 className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Customize"
               >
@@ -1201,7 +1228,12 @@ if (showShareView) {
             
             <div className="relative">
   <button
-    onClick={() => setShowShareMenu(!showShareMenu)}
+    onClick={() => {
+  setShowShareMenu(!showShareMenu);
+  setShowRankingsList(false);
+  setShowCustomizeMenu(false);
+  setShowTracksMenu(false);
+}}
     className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition"
     title="Share"
   >
@@ -1294,7 +1326,12 @@ if (showShareView) {
                         
             <div className="relative">
               <button
-                onClick={() => setShowTracksMenu(!showTracksMenu)}
+                onClick={() => {
+  setShowTracksMenu(!showTracksMenu);
+  setShowRankingsList(false);
+  setShowCustomizeMenu(false);
+  setShowShareMenu(false);
+}}
                 className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
                 title="Manage Tracks"
               >
