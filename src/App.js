@@ -531,7 +531,8 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
     link.click();
   };
 
-  const theme = COLOR_THEMES[currentTheme];
+  const theme = COLOR_THEMES[selectedAlbum] || COLOR_THEMES.folklore;
+
 
   if (view === 'auth') {
     return (
