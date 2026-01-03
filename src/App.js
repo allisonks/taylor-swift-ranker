@@ -917,6 +917,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
               ) : (
                 allAvailableTracks.map((track, index) => {
                 const trackTitle = track.title || track;
+                const trackNumber = track.track_number || (index + 1);
                 const isVisible = visibleTrackTitles.has(trackTitle);
                 
                 return (
@@ -927,7 +928,7 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
                       onChange={() => toggleTrackVisibility(track)}
                       className="mt-1 w-4 h-4 rounded flex-shrink-0"
                     />
-                    <span className="text-sm text-gray-800">{trackTitle}</span>
+                    <span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
                   </label>
                 );
  })
@@ -1080,13 +1081,7 @@ allAvailableTracks.map((track, index) => {
                             onChange={() => toggleTrackVisibility(track)}
                             className="mt-1 w-4 h-4 rounded flex-shrink-0"
                           />
-                         // OLD:
-<span className="text-sm text-gray-800">{trackNumber}.{trackTitle}</span>
-
-// NEW:
-const trackNumber = track.track_number || (index + 1);
-// ... then in the JSX:
-<span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
+                         <span className="text-sm text-gray-800">{trackNumber}.{trackTitle}</span>
                         </label>
                       );
                     })
