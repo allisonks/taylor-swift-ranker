@@ -579,7 +579,6 @@ const handleTouchMove = (e, index) => {
 const handleTouchEnd = () => {
   setDraggedItem(null);
   setTouchStartY(null);
-};
   };
 
   const handleImageUpload = (e) => {
