@@ -270,6 +270,20 @@ const TaylorSwiftRanker = () => {
     loadAlbums();
   }, []);
 
+  useEffect(() => {
+  const handlePopState = (e) => {
+    if (showShareView) {
+      setShowShareView(false);
+    } else if (view === 'ranking') {
+      setView('albums');
+    }
+  };
+
+  window.addEventListener('popstate', handlePopState);
+  return () => window.removeEventListener('popstate', handlePopState);
+}, [showShareView, view]);
+
+
   const loadAlbums = async () => {
     try {
       const data = await supabase.getAlbums();
@@ -943,7 +957,10 @@ if (showShareView) {
             </button>
             
             <button
-              onClick={() => setShowShareView(true)}
+  onClick={() => {
+    setShowShareView(true);
+    window.history.pushState({ view: 'share' }, '', '');
+  }}
               className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
               title="Share"
             >
@@ -1103,7 +1120,10 @@ if (showShareView) {
             </button>
             
             <button
-              onClick={() => setShowShareView(true)}
+  onClick={() => {
+    setShowShareView(true);
+    window.history.pushState({ view: 'share' }, '', '');
+  }}
               className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition"
               title="Share"
             >
