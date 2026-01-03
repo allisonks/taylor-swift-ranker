@@ -1554,10 +1554,48 @@ allAvailableTracks.map((track, index) => {
             })}
           </div>
           </div>
+          {/* Hidden element for image generation */}
+      <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+        <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`} style={{ width: '800px' }}>
+          {albumImage && (
+            <div className="flex justify-center mb-6">
+              <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
+            </div>
+          )}
+          <h1 className="text-4xl font-bold text-white text-center mb-2">
+            {rankingName || 'My Ranking'}
+          </h1>
+          <h2 className="text-xl text-purple-200 text-center mb-8">
+            {selectedAlbum?.name}
+          </h2>
+          
+          <div className="space-y-3">
+            {songs.map((song, index) => {
+              const songTitle = song.title || song;
+              return (
+                <div
+                  key={index}
+                  className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4"
+                >
+                  <div className="text-3xl font-bold text-white w-12 text-center">
+                    {index + 1}
+                  </div>
+                  <div className="text-lg text-white flex-1">{songTitle}</div>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6 text-center text-purple-200 text-sm">
+            Made with TAS Songlist
+          </div>
+        </div>
+      </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default TaylorSwiftRanker;
