@@ -1371,6 +1371,7 @@ if (showShareView) {
           </div>
           </div>
           </div>
+          </div>
           {/* Hidden element for image generation */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
         <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`} style={{ width: '800px' }}>
@@ -1408,9 +1409,8 @@ if (showShareView) {
           </div>
         </div>
       </div>
-        </div>
+        
       );
 };
-
 
 export default TaylorSwiftRanker;
