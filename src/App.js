@@ -1409,7 +1409,6 @@ if (showShareView) {
         </div>
       </div>
         </div>
-    </div>
       );
 };
 
