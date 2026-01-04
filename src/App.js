@@ -1200,7 +1200,7 @@ if (showShareView) {
         />
 
         {showRankingsList && (
-  <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
+  <div className="max-w-md mx-auto bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
     <div className="flex justify-between items-center mb-3">
       <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
       <button
