@@ -1188,18 +1188,7 @@ if (showShareView) {
       )}
     </div>
   )}
-</div>
-  </div>
-
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleImageUpload}
-          accept="image/*"
-          className="hidden"
-        />
-
-        {showRankingsList && (
+  {showRankingsList && (
   <div className="fixed md:absolute top-14 md:top-12 left-2 md:left-0 w-72 md:w-80 max-h-96 overflow-y-auto bg-white bg-opacity-80 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
     <div className="flex justify-between items-center mb-3">
       <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
@@ -1253,6 +1242,18 @@ if (showShareView) {
     )}
   </div>
 )}
+</div>
+  </div>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          accept="image/*"
+          className="hidden"
+        />
+
+        
 
         {showThemeSelector && (
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-4 mb-4">
