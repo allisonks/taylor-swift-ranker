@@ -1226,7 +1226,7 @@ if (showShareView) {
 </div>
 
 </div>
-
+<>
 {/* Desktop Customize Menu */}
 {showCustomizeMenu && (
   <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
@@ -1405,7 +1405,7 @@ if (showShareView) {
       For Instagram, download the image and share from your camera roll
     </p>
   </div>
-)}
+)}</>
 
         <input
           type="file"
