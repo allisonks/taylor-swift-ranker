@@ -1368,7 +1368,7 @@ if (showShareView) {
                 </div>
               );
             })}
-          </div>
+          
           </div>
           </div>
           </div>
@@ -1409,7 +1409,7 @@ if (showShareView) {
           </div>
         </div>
       </div>
-        
+        </div>
       );
 };
 
