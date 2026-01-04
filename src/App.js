@@ -1226,7 +1226,7 @@ if (showShareView) {
 </div>
 
 </div>
-<>
+
 {/* Desktop Customize Menu */}
 {showCustomizeMenu && (
   <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
@@ -1405,7 +1405,7 @@ if (showShareView) {
       For Instagram, download the image and share from your camera roll
     </p>
   </div>
-)}</>
+)}
 
         <input
           type="file"
@@ -1590,6 +1590,7 @@ if (showShareView) {
             })}
           </div>
           </div>
+          </div>
           {/* Hidden element for image generation */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
         <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`} style={{ width: '800px' }}>
@@ -1628,9 +1629,8 @@ if (showShareView) {
         </div>
       </div>
         </div>
-      </div>
-    </div>
-  );
+    
+      );
 };
 
 
