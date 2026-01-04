@@ -208,6 +208,7 @@ const TaylorSwiftRanker = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [songs, setSongs] = useState([]);
@@ -290,6 +291,7 @@ const TaylorSwiftRanker = () => {
 
 
   const loadAlbums = async () => {
+    
     try {
       const data = await supabase.getAlbums();
       // Sort albums by release date (newest first)
@@ -306,6 +308,8 @@ const TaylorSwiftRanker = () => {
   };
 
   const loadAllRankings = async () => {
+      if (isGuest) return;
+
     try {
       const userId = supabase.getUserId();
       if (!userId) return;
@@ -317,6 +321,8 @@ const TaylorSwiftRanker = () => {
   };
 
   const loadRankings = async (albumId) => {
+      if (isGuest) return;
+
     try {
       const data = await supabase.getRankings(albumId);
       setSavedRankings(data);
@@ -347,6 +353,7 @@ const TaylorSwiftRanker = () => {
   const handleSignOut = () => {
     supabase.signOut();
     setUser(null);
+    setIsGuest(false);
     setView('auth');
     setEmail('');
     setPassword('');
@@ -490,6 +497,11 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
   };
 
   const saveRanking = async () => {
+      if (isGuest) {
+    setMessage('Sign in to save rankings');
+    setTimeout(() => setMessage(''), 3000);
+    return;
+  }
     if (!rankingName.trim()) {
       setMessage('Please enter a name for your ranking!');
       setTimeout(() => setMessage(''), 3000);
@@ -508,6 +520,12 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
   };
 
   const deleteRanking = async (rankingId) => {
+      if (isGuest) {
+    setMessage('Sign in to manage saved rankings');
+    setTimeout(() => setMessage(''), 3000);
+    return;
+  }
+
     if (!window.confirm('Are you sure you want to delete this ranking?')) return;
     
     try {
@@ -682,6 +700,19 @@ const handleTouchEnd = () => {
               {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
             </button>
           </form>
+          <button
+  type="button"
+  onClick={() => {
+    setIsGuest(true);
+    setUser({ guest: true });
+    setView('albums');
+    loadAlbums(); // albums are public
+  }}
+  className="w-full mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-3 rounded-lg font-bold transition"
+>
+  Continue as Guest
+</button>
+
         </div>
       </div>
     );
@@ -938,6 +969,8 @@ if (showShareView) {
     </button>
     
     <div className="flex items-center gap-1 md:gap-2">
+      {!isGuest && (
+
       <button
         onClick={() => {
           setShowRankingsList(!showRankingsList);
@@ -951,7 +984,7 @@ if (showShareView) {
         <Folder size={16} className="md:w-[18px] md:h-[18px]" />
         <span className="text-xs md:text-sm">{savedRankings.length}</span>
       </button>
-      
+      )}
       <button
         onClick={() => {
           setShowCustomizeMenu(!showCustomizeMenu);
