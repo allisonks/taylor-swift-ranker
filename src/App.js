@@ -1042,7 +1042,7 @@ if (showShareView) {
         Reset to Original
       </button>
       
-      <div className="space-y-1 max-h-60 overflow-y-auto custom-scrollbar">
+      <div className="space-y-1 max-h-60 overflow-y-auto">
         {allAvailableTracks.length === 0 ? (
           <p className="text-sm text-gray-500 p-2">No tracks available</p>
         ) : (
