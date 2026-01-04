@@ -920,492 +920,272 @@ if (showShareView) {
         />
       )}
       
-        <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm">
-        <div className="p-2 flex items-center justify-between gap-1">
-          <button
-            onClick={() => setView('albums')}
-            className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-            title="Back to Main"
-          >
-          <span className="text-lg">←</span>
-          </button>
-          
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => { setShowRankingsList(!showRankingsList);
-                setShowCustomizeMenu(false);
-                 setShowShareMenu(false);
-               setShowTracksMenu(false);}}
-              className={`flex items-center gap-1 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 py-2 rounded-lg transition`}
-              title="My rankings"
-            >
-              <Folder size={16} />
-              <span className="text-xs">{savedRankings.length}</span>
-            </button>
-            
-            <button
-              onClick={() => {
-  setShowCustomizeMenu(!showCustomizeMenu);
-  setShowRankingsList(false);
-  setShowShareMenu(false);
-  setShowTracksMenu(false);
-}}
-              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-              title="Customize"
-            >
-              <Settings2 size={16} />
-            </button>
-            
-            <button
-              onClick={saveRanking}
-              className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
-              title="Save"
-            >
-              <Save size={16} />
-            </button>
-            
-            <button
-  onClick={() => {
-  setShowShareMenu(!showShareMenu);
-  setShowRankingsList(false);
-  setShowCustomizeMenu(false);
-  setShowTracksMenu(false);
-}}
-  className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
-  title="Share"
->
-  <Share2 size={16} />
-</button>
-                        
-            <button
-              onClick={() => {
-  setShowTracksMenu(!showTracksMenu);
-  setShowRankingsList(false);
-  setShowCustomizeMenu(false);
-  setShowShareMenu(false);
-}}
-              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-              title="Manage Tracks"
-            >
-              <List size={16} />
-            </button>
-            
-            <button
-              onClick={handleSignOut}
-              className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-              title="Sign Out"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
-        </div>
-                
-        {showTracksMenu && (
-          <div className="fixed top-14 right-2 w-72 max-h-96 overflow-y-auto bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
-            <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
-            
-            {hasBonusTracks && (
-              <div className="mb-3 pb-3 border-b border-gray-300">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <div className="relative">
-                    <input
-                      type="checkbox"
-                      checked={includeBonusTracks}
-                      onChange={toggleBonusTracks}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
-                  </div>
-                  <span className="text-xs text-gray-800">Include Bonus Tracks</span>
-                </label>
-              </div>
-            )}
-            
-            <button
-              onClick={() => {
-                resetToOriginal();
-                setShowTracksMenu(false);
-              }}
-              className="w-full flex items-center gap-2 text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-lg mb-3 transition"
-            >
-              <RotateCcw size={16} />
-              Reset to Original
-            </button>
-            
-            <div className="space-y-1 max-h-60 overflow-y-auto">
-              {allAvailableTracks.length === 0 ? (
-                <p className="text-sm text-gray-500 p-2">No tracks available</p>
-              ) : (
-                allAvailableTracks.map((track, index) => {
-                const trackTitle = track.title || track;
-                const trackNumber = track.track_number || (index + 1);
-                const isVisible = visibleTrackTitles.has(trackTitle);
-                
-                return (
-                  <label key={index} className="flex items-start gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
-                    <input
-                      type="checkbox"
-                      checked={isVisible}
-                      onChange={() => toggleTrackVisibility(track)}
-                      className="mt-1 w-4 h-4 rounded flex-shrink-0"
-                    />
-                    <span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
-                  </label>
-                );
- })
-              )}
-              
-            </div>
-          </div>
-        )}
-        {showShareMenu && (
-  <div className="fixed top-14 right-2 w-72 max-w-[calc(100vw-1rem)] bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-[60] p-4">
-    <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
+      <div className="max-w-2xl mx-auto relative z-10 p-8 pt-20 md:pt-8">
+       {/* Consolidated button bar - responsive for mobile and desktop */}
+<div className="md:relative md:mb-8 fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent md:bg-transparent backdrop-blur-sm md:backdrop-blur-none">
+  <div className="p-2 md:p-0 flex items-center justify-between gap-1 md:gap-4">
+    <button
+      onClick={() => setView('albums')}
+      className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 md:px-4 py-2 rounded-lg transition`}
+      title="Back to Main"
+    >
+      <span className="text-lg md:text-base">←</span>
+      <span className="hidden md:inline">Back to Albums</span>
+    </button>
     
-    <div className="space-y-2">
+    <div className="flex items-center gap-1 md:gap-2">
       <button
         onClick={() => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          window.open(
-            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
-            '_blank',
-            'width=550,height=420'
-          );
+          setShowRankingsList(!showRankingsList);
+          setShowCustomizeMenu(false);
           setShowShareMenu(false);
+          setShowTracksMenu(false);
         }}
-        className="w-full bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 border border-gray-700"
+        className={`flex items-center gap-1 md:gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-2 md:px-3 py-2 rounded-lg transition`}
+        title="My rankings"
       >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-        Share on Twitter/X
+        <Folder size={16} className="md:w-[18px] md:h-[18px]" />
+        <span className="text-xs md:text-sm">{savedRankings.length}</span>
       </button>
       
       <button
         onClick={() => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
-            '_blank',
-            'width=550,height=420'
-          );
+          setShowCustomizeMenu(!showCustomizeMenu);
+          setShowRankingsList(false);
           setShowShareMenu(false);
+          setShowTracksMenu(false);
         }}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+        title="Customize"
       >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-        Share on Facebook
+        <Settings2 size={16} className="md:w-[18px] md:h-[18px]" />
       </button>
       
       <button
-        onClick={async () => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          try {
-            await navigator.clipboard.writeText(shareText);
-            setMessage('✓ Link copied to clipboard!');
-            setTimeout(() => setMessage(''), 2000);
-            setShowShareMenu(false);
-          } catch (err) {
-            console.error('Failed to copy:', err);
-          }
-        }}
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        onClick={saveRanking}
+        className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
+        title="Save"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-        </svg>
-        Copy Link
+        <Save size={16} className="md:w-[18px] md:h-[18px]" />
       </button>
       
       <button
         onClick={() => {
-          downloadAsImage();
+          setShowShareMenu(!showShareMenu);
+          setShowRankingsList(false);
+          setShowCustomizeMenu(false);
+          setShowTracksMenu(false);
+        }}
+        className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
+        title="Share"
+      >
+        <Share2 size={16} className="md:w-[18px] md:h-[18px]" />
+      </button>
+      
+      <button
+        onClick={() => {
+          setShowTracksMenu(!showTracksMenu);
+          setShowRankingsList(false);
+          setShowCustomizeMenu(false);
           setShowShareMenu(false);
         }}
-        className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+        title="Manage Tracks"
       >
-        <Download size={20} />
-        Download as Image
+        <List size={16} className="md:w-[18px] md:h-[18px]" />
+      </button>
+      
+      <button
+        onClick={handleSignOut}
+        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+        title="Sign Out"
+      >
+        <LogOut size={16} className="md:w-[18px] md:h-[18px]" />
       </button>
     </div>
-    
-    <p className="text-gray-600 text-xs text-center mt-3">
-      For Instagram, download the image and share from your camera roll
-    </p>
   </div>
-)}
-      </div>
-      
-      <div className="max-w-2xl mx-auto relative z-10 p-8 pt-20 md:pt-8">
-        {/* Desktop header */}
-        {/* Desktop header */}
-<div className="hidden md:flex flex-row justify-between items-center gap-4 mb-8">
-  <button
-    onClick={() => setView('albums')}
-    className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-4 py-2 rounded-lg transition`}
-  >
-    <span>←</span>
-    <span>Back to Albums</span>
-  </button>
   
-  <div className="flex items-center gap-2">
-    <button
-      onClick={() => {
-        setShowRankingsList(!showRankingsList);
-        setShowCustomizeMenu(false);
-        setShowShareMenu(false);
-        setShowTracksMenu(false);
-      }}
-      className={`flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} px-3 py-2 rounded-lg transition`}
-      title="My rankings"
-    >
-      <Folder size={18} />
-      <span className="text-sm">{savedRankings.length}</span>
-    </button>
-    
-    <button
-      onClick={() => {
-        setShowCustomizeMenu(!showCustomizeMenu);
-        setShowRankingsList(false);
-        setShowShareMenu(false);
-        setShowTracksMenu(false);
-      }}
-      className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-      title="Customize"
-    >
-      <Settings2 size={18} />
-    </button>
-    
-    <button
-      onClick={saveRanking}
-      className="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition"
-      title="Save"
-    >
-      <Save size={18} />
-    </button>
-    
-    <button
-      onClick={() => {
-        setShowShareMenu(!showShareMenu);
-        setShowRankingsList(false);
-        setShowCustomizeMenu(false);
-        setShowTracksMenu(false);
-      }}
-      className="flex items-center justify-center bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white p-2 rounded-lg transition"
-      title="Share"
-    >
-      <Share2 size={18} />
-    </button>
-    
-    <button
-      onClick={() => {
-        setShowTracksMenu(!showTracksMenu);
-        setShowRankingsList(false);
-        setShowCustomizeMenu(false);
-        setShowShareMenu(false);
-      }}
-      className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-      title="Manage Tracks"
-    >
-      <List size={18} />
-    </button>
-    
-    <button
-      onClick={handleSignOut}
-      className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-      title="Sign Out"
-    >
-      <LogOut size={18} />
-    </button>
-  </div>
-</div>
-
-</div>
-
-{/* Desktop Customize Menu */}
-{showCustomizeMenu && (
-  <div className="absolute right-0 mt-2 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-10">
-    <button
-      onClick={() => {
-        setShowThemeSelector(true);
-        setShowCustomizeMenu(false);
-      }}
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition"
-    >
-      <Palette size={18} />
-      Change Color Theme
-    </button>
-    <button
-      onClick={() => {
-        fileInputRef.current?.click();
-        setShowCustomizeMenu(false);
-      }}
-      className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition"
-    >
-      <ImageIcon size={18} />
-      Upload Album Image
-    </button>
-    {albumImage && (
-      <button
-        onClick={() => {
-          setAlbumImage(null);
-          setShowCustomizeMenu(false);
-        }}
-        className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-red-600 rounded-b-lg transition"
-      >
-        <X size={18} />
-        Remove Image
-      </button>
-    )}
-  </div>
-)}
-
-{/* Desktop Tracks Menu */}
-{showTracksMenu && (
-  <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
-    <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
-    
-    {hasBonusTracks && (
-      <div className="mb-3 pb-3 border-b border-gray-300">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <div className="relative">
-            <input
-              type="checkbox"
-              checked={includeBonusTracks}
-              onChange={toggleBonusTracks}
-              className="sr-only peer"
-            />
-            <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
-          </div>
-          <span className="text-sm text-gray-800">Include Bonus Tracks</span>
-        </label>
-      </div>
-    )}
-    
-    <button
-      onClick={() => {
-        resetToOriginal();
-        setShowTracksMenu(false);
-      }}
-      className="w-full flex items-center gap-2 text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-lg mb-3 transition"
-    >
-      <RotateCcw size={16} />
-      Reset to Original
-    </button>
-    
-    <div className="space-y-1 max-h-60 overflow-y-auto">
-      {allAvailableTracks.length === 0 ? (
-        <p className="text-sm text-gray-500 p-2">No tracks available</p>
-      ) : (
-        allAvailableTracks.map((track, index) => {
-          const trackTitle = track.title || track;
-          const trackNumber = track.track_number || (index + 1);
-          const isVisible = visibleTrackTitles.has(trackTitle);
-          
-          return (
-            <label key={index} className="flex items-start gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+  {/* Tracks Menu */}
+  {showTracksMenu && (
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-h-96 overflow-y-auto bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+      <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
+      
+      {hasBonusTracks && (
+        <div className="mb-3 pb-3 border-b border-gray-300">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <div className="relative">
               <input
                 type="checkbox"
-                checked={isVisible}
-                onChange={() => toggleTrackVisibility(track)}
-                className="mt-1 w-4 h-4 rounded flex-shrink-0"
+                checked={includeBonusTracks}
+                onChange={toggleBonusTracks}
+                className="sr-only peer"
               />
-              <span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
-            </label>
-          );
-        })
+              <div className="w-11 h-6 bg-gray-400 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-pink-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+            </div>
+            <span className="text-xs md:text-sm text-gray-800">Include Bonus Tracks</span>
+          </label>
+        </div>
+      )}
+      
+      <button
+        onClick={() => {
+          resetToOriginal();
+          setShowTracksMenu(false);
+        }}
+        className="w-full flex items-center gap-2 text-gray-800 hover:bg-gray-100 px-3 py-2 rounded-lg mb-3 transition"
+      >
+        <RotateCcw size={16} />
+        Reset to Original
+      </button>
+      
+      <div className="space-y-1 max-h-60 overflow-y-auto">
+        {allAvailableTracks.length === 0 ? (
+          <p className="text-sm text-gray-500 p-2">No tracks available</p>
+        ) : (
+          allAvailableTracks.map((track, index) => {
+            const trackTitle = track.title || track;
+            const trackNumber = track.track_number || (index + 1);
+            const isVisible = visibleTrackTitles.has(trackTitle);
+            
+            return (
+              <label key={index} className="flex items-start gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+                <input
+                  type="checkbox"
+                  checked={isVisible}
+                  onChange={() => toggleTrackVisibility(track)}
+                  className="mt-1 w-4 h-4 rounded flex-shrink-0"
+                />
+                <span className="text-sm text-gray-800">{trackNumber}. {trackTitle}</span>
+              </label>
+            );
+          })
+        )}
+      </div>
+    </div>
+  )}
+  
+  {/* Share Menu */}
+  {showShareMenu && (
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-w-[calc(100vw-1rem)] bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-[60] md:z-50 p-4">
+      <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
+      
+      <div className="space-y-2">
+        <button
+          onClick={() => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            window.open(
+              `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 border border-gray-700"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+          Share on Twitter/X
+        </button>
+        
+        <button
+          onClick={() => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            window.open(
+              `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
+              '_blank',
+              'width=550,height=420'
+            );
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          Share on Facebook
+        </button>
+        
+        <button
+          onClick={async () => {
+            const shareUrl = window.location.origin;
+            const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
+            try {
+              await navigator.clipboard.writeText(shareText);
+              setMessage('✓ Link copied to clipboard!');
+              setTimeout(() => setMessage(''), 2000);
+              setShowShareMenu(false);
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+          }}
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          Copy Link
+        </button>
+        
+        <button
+          onClick={() => {
+            downloadAsImage();
+            setShowShareMenu(false);
+          }}
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+        >
+          <Download size={20} />
+          Download as Image
+        </button>
+      </div>
+      
+      <p className="text-gray-600 text-xs text-center mt-3">
+        For Instagram, download the image and share from your camera roll
+      </p>
+    </div>
+  )}
+  
+  {/* Customize Menu */}
+  {showCustomizeMenu && (
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-56 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50">
+      <button
+        onClick={() => {
+          setShowThemeSelector(true);
+          setShowCustomizeMenu(false);
+        }}
+        className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition rounded-t-lg"
+      >
+        <Palette size={18} />
+        Change Color Theme
+      </button>
+      <button
+        onClick={() => {
+          fileInputRef.current?.click();
+          setShowCustomizeMenu(false);
+        }}
+        className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-gray-800 transition"
+      >
+        <ImageIcon size={18} />
+        Upload Album Image
+      </button>
+      {albumImage && (
+        <button
+          onClick={() => {
+            setAlbumImage(null);
+            setShowCustomizeMenu(false);
+          }}
+          className="w-full text-left px-4 py-3 hover:bg-gray-100 flex items-center gap-3 text-red-600 rounded-b-lg transition"
+        >
+          <X size={18} />
+          Remove Image
+        </button>
       )}
     </div>
+  )}
+</div>
   </div>
-)}
-
-{/* Desktop Share Menu */}
-{showShareMenu && (
-  <div className="absolute right-0 mt-2 w-80 bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
-    <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
-    
-    <div className="space-y-2">
-      <button
-        onClick={() => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          window.open(
-            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`,
-            '_blank',
-            'width=550,height=420'
-          );
-          setShowShareMenu(false);
-        }}
-        className="w-full bg-black hover:bg-gray-900 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 border border-gray-700"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-        Share on Twitter/X
-      </button>
-      
-      <button
-        onClick={() => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`,
-            '_blank',
-            'width=550,height=420'
-          );
-          setShowShareMenu(false);
-        }}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-        Share on Facebook
-      </button>
-      
-      <button
-        onClick={async () => {
-          const shareUrl = window.location.origin;
-          const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
-          try {
-            await navigator.clipboard.writeText(shareText);
-            setMessage('✓ Link copied to clipboard!');
-            setTimeout(() => setMessage(''), 2000);
-            setShowShareMenu(false);
-          } catch (err) {
-            console.error('Failed to copy:', err);
-          }
-        }}
-        className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-        </svg>
-        Copy Link
-      </button>
-      
-      <button
-        onClick={() => {
-          downloadAsImage();
-          setShowShareMenu(false);
-        }}
-        className="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2"
-      >
-        <Download size={20} />
-        Download as Image
-      </button>
-    </div>
-    
-    <p className="text-gray-600 text-xs text-center mt-3">
-      For Instagram, download the image and share from your camera roll
-    </p>
-  </div>
-)}
 
         <input
           type="file"
@@ -1629,7 +1409,7 @@ if (showShareView) {
         </div>
       </div>
         </div>
-    
+    </div>
       );
 };
 
