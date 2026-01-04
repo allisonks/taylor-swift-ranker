@@ -1070,7 +1070,7 @@ if (showShareView) {
   
   {/* Share Menu */}
   {showShareMenu && (
-    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-w-[calc(100vw-1rem)] bg-white bg-opacity-95 backdrop-blur-lg rounded-lg shadow-xl z-[60] md:z-50 p-4">
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-w-[calc(100vw-1rem)] bg-white bg-opacity-10 backdrop-blur-lg rounded-lg shadow-xl z-[60] md:z-50 p-4">
       <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
       
       <div className="space-y-2">
