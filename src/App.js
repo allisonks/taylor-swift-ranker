@@ -1319,7 +1319,7 @@ if (showShareView) {
           </div>
         )}
 
-<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-3 sm:p-6 shadow-2xl mb-4 sm:mb-6 overflow-hidden">        
+<div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-3 sm:p-6 shadow-2xl mb-4 sm:mb-6 overflow-hidden max-w-full">
           <div className="md:px-0 -mx-3 px-3 md:mx-0">
             <div className="space-y-2 sm:space-y-3 md:px-0 px-3">
             {songs.map((song, index) => {
