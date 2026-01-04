@@ -1011,7 +1011,7 @@ if (showShareView) {
   
   {/* Tracks Menu */}
   {showTracksMenu && (
-    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-h-96 overflow-y-auto bg-white bg-opacity-30 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-h-96 overflow-y-auto bg-white bg-opacity-50 backdrop-blur-lg rounded-lg shadow-xl z-50 p-4">
       <h3 className="text-gray-800 font-bold mb-3">Manage Tracks</h3>
       
       {hasBonusTracks && (
@@ -1070,7 +1070,7 @@ if (showShareView) {
   
   {/* Share Menu */}
   {showShareMenu && (
-    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-w-[calc(100vw-1rem)] bg-white bg-opacity-30 backdrop-blur-lg rounded-lg shadow-xl z-[60] md:z-50 p-4">
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-72 md:w-80 max-w-[calc(100vw-1rem)] bg-white bg-opacity-50 backdrop-blur-lg rounded-lg shadow-xl z-[60] md:z-50 p-4">
       <h3 className="text-gray-800 font-bold mb-3">Share Your Ranking</h3>
       
       <div className="space-y-2">
@@ -1153,7 +1153,7 @@ if (showShareView) {
   
   {/* Customize Menu */}
   {showCustomizeMenu && (
-    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-56 bg-white bg-opacity-30 backdrop-blur-lg rounded-lg shadow-xl z-50">
+    <div className="fixed md:absolute top-14 md:top-12 right-2 md:right-0 w-56 bg-white bg-opacity-50 backdrop-blur-lg rounded-lg shadow-xl z-50">
       <button
         onClick={() => {
           setShowThemeSelector(true);
@@ -1200,7 +1200,7 @@ if (showShareView) {
         />
 
         {showRankingsList && (
-  <div className="max-w-md mx-auto bg-white bg-opacity-30 backdrop-blur-lg rounded-xl p-4 mb-4">
+  <div className="max-w-md mx-auto bg-white bg-opacity-50 backdrop-blur-lg rounded-xl p-4 mb-4">
     <div className="flex justify-between items-center mb-3">
       <h3 className={`${theme.textPrimary} font-semibold`}>My Rankings</h3>
       <button
