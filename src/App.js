@@ -1382,8 +1382,9 @@ if (showShareView) {
           </div>
         )}
 
-  <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl mb-6">
-  <div className="space-y-2 sm:space-y-3">
+<div className="p-4 sm:p-6">
+  <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl">
+    <div className="space-y-2 sm:space-y-3">
 
             {songs.map((song, index) => {
               const songTitle = song.title || song;
@@ -1433,7 +1434,7 @@ if (showShareView) {
             })}
           
           </div>
-          
+          </div>
           </div>
           {/* Hidden element for image generation */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
