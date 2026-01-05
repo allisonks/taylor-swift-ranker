@@ -969,7 +969,8 @@ if (showShareView) {
         />
       )}
       
-      <div className="max-w-4xl mx-auto relative z-10 px-8 pt-20 md:pt-0">
+      <div className="max-w-4xl mx-auto relative z-10 px-4 md:px-8 pt-20 md:pt-0">
+
        {/* Consolidated button bar - responsive for mobile and desktop */}
 <div className="md:relative md:mb-8 fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/60 to-transparent md:from-transparent md:to-transparent backdrop-blur-sm md:backdrop-blur-none">
   <div className="p-2 md:p-0 flex items-center justify-between gap-1 md:gap-4">
@@ -1382,7 +1383,8 @@ if (showShareView) {
           </div>
         )}
 
-<div className="p-4 sm:p-6 md:p-0">
+<div className="p-4 md:p-0">
+
   <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl">
     <div className="space-y-2 sm:space-y-3">
 
