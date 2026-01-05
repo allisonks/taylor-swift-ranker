@@ -665,95 +665,153 @@ const handleTouchEnd = () => {
   }
 
   if (view === 'albums') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-400 via-yellow-400 through-green-400 via-blue-400 to-purple-500 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-white">TAS Songlist</h1>
-            {isGuest ? (
-  <button
-   onClick={() => goToAuthFromGuest('albums')}
-    className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
-    >
-    <LogIn size={20} />
-  <span className="hidden sm:inline">Sign In</span>
-  </button>
-) : (
-  <button
-    onClick={handleSignOut}
-className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"  >
-    <LogOut size={20} />
-     <span className="hidden sm:inline">Sign Out</span>
-  </button>
-)}
+  // Sort rankings by most recently updated
+  const sortedRankings = [...allRankings].sort((a, b) => {
+    const dateA = new Date(a.updated_at || a.created_at);
+    const dateB = new Date(b.updated_at || b.created_at);
+    return dateB - dateA; // Descending (newest first)
+  });
 
-          </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-400 via-yellow-400 through-green-400 via-blue-400 to-purple-500 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-6 md:mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">TAS Songlist</h1>
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 md:px-4 py-2 rounded-lg transition"
+          >
+            <LogOut size={18} className="md:w-5 md:h-5" />
+            <span className="hidden md:inline">Sign Out</span>
+          </button>
+        </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+        {/* Mobile: Compact rankings list first, then albums */}
+        <div className="md:hidden space-y-6">
+          {sortedRankings.length === 0 ? (
+            <div className="text-center">
+              <p className="text-white text-lg font-semibold mb-2">Choose an album below to start</p>
+            </div>
+          ) : (
             <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
-              <div className="grid gap-4">
-                {albums.map((album) => {
+              <h2 className="text-xl font-bold text-white mb-3">My Rankings</h2>
+              <div className="space-y-2">
+                {sortedRankings.map((ranking) => {
+                  const album = albums.find(a => a.id === ranking.album_id);
+                  if (!album) return null;
+                  
                   const albumTheme = getAlbumTheme(album.name);
                   const albumThemeColors = COLOR_THEMES[albumTheme];
                   
                   return (
                     <div
-                      key={album.id}
-                      onClick={() => selectAlbum(album)}
-                      className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
+                      key={ranking.id}
+                      onClick={() => {
+                        selectAlbum(album);
+                        setTimeout(() => loadSavedRanking(ranking, album), 100);
+                      }}
+                      className={`${albumThemeColors.bgGradient} rounded-lg p-3 hover:scale-105 cursor-pointer transition shadow-lg`}
                     >
-                      <h3 className={`text-2xl font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
-                      <p className={`${albumThemeColors.textSecondary}`}>{album.artist}</p>
-                      <p className={`${albumThemeColors.textSecondary} text-sm mt-2`}>{album.songs.length} songs</p>
+                      <h3 className={`font-semibold ${albumThemeColors.textPrimary}`}>
+                        {ranking.ranking_name || 'Untitled Ranking'}
+                      </h3>
                     </div>
                   );
                 })}
               </div>
             </div>
+          )}
 
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
-              {allRankings.length === 0 ? (
-                <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
-                  <p className="text-white mb-2">No saved rankings yet!</p>
-                  <p className="text-purple-100 text-sm">Create your first ranking by selecting an album</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {allRankings.map((ranking) => {
-                    const album = albums.find(a => a.id === ranking.album_id);
-                    if (!album) return null;
-                    
-                    const albumTheme = getAlbumTheme(album.name);
-                    const albumThemeColors = COLOR_THEMES[albumTheme];
-                    
-                    return (
-                      <div
-                        key={ranking.id}
-                        onClick={() => {
-                          selectAlbum(album);
-                         setTimeout(() => loadSavedRanking(ranking, album), 100);
-                        }}
-                        className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
-                      >
-                         <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>{ranking.ranking_name || 'Untitled Ranking'}</h3>
-                        <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.name}</p>
-                        <p className={`${albumThemeColors.textSecondary} text-xs mt-1`}>
-                          Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+          {/* Albums list */}
+          <div>
+            <h2 className="text-xl font-bold text-white mb-3">
+              {sortedRankings.length === 0 ? 'Albums' : 'Start New Ranking'}
+            </h2>
+            <div className="grid gap-3">
+              {albums.map((album) => {
+                const albumTheme = getAlbumTheme(album.name);
+                const albumThemeColors = COLOR_THEMES[albumTheme];
+                
+                return (
+                  <div
+                    key={album.id}
+                    onClick={() => selectAlbum(album)}
+                    className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-24 flex flex-col justify-center`}
+                  >
+                    <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
+                    <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.songs.length} songs</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
 
+        {/* Desktop: Two-column layout as before */}
+        <div className="hidden md:grid md:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
+            <div className="grid gap-4">
+              {albums.map((album) => {
+                const albumTheme = getAlbumTheme(album.name);
+                const albumThemeColors = COLOR_THEMES[albumTheme];
+                
+                return (
+                  <div
+                    key={album.id}
+                    onClick={() => selectAlbum(album)}
+                    className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
+                  >
+                    <h3 className={`text-2xl font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
+                    <p className={`${albumThemeColors.textSecondary}`}>{album.artist}</p>
+                    <p className={`${albumThemeColors.textSecondary} text-sm mt-2`}>{album.songs.length} songs</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
+            {sortedRankings.length === 0 ? (
+              <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
+                <p className="text-white mb-2">No saved rankings yet!</p>
+                <p className="text-purple-100 text-sm">Create your first ranking by selecting an album</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {sortedRankings.map((ranking) => {
+                  const album = albums.find(a => a.id === ranking.album_id);
+                  if (!album) return null;
+                  
+                  const albumTheme = getAlbumTheme(album.name);
+                  const albumThemeColors = COLOR_THEMES[albumTheme];
+                  
+                  return (
+                    <div
+                      key={ranking.id}
+                      onClick={() => {
+                        selectAlbum(album);
+                        setTimeout(() => loadSavedRanking(ranking, album), 100);
+                      }}
+                      className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
+                    >
+                      <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>{ranking.ranking_name || 'Untitled Ranking'}</h3>
+                      <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.name}</p>
+                      <p className={`${albumThemeColors.textSecondary} text-xs mt-1`}>
+                        Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 if (showShareView) {
   const shareUrl = 'taylor-swift-ranker.vercel.app'; // Replace with your actual app URL
   const shareText = `Check out my ${selectedAlbum.name} ranking! Create your own at ${shareUrl}`;
