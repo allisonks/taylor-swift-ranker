@@ -29,7 +29,7 @@ export const COLOR_THEMES = {
     name: 'Lover',
     bgGradient: 'bg-gradient-to-b from-pink-300 to-blue-300',
     textPrimary: 'text-purple-950',
-    textSecondary: 'text-fuscia-950', // (typo note below)
+    textSecondary: 'text-fuchia-950',
   },
   reputation: {
     name: 'Reputation',

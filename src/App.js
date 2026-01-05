@@ -287,6 +287,14 @@ const TaylorSwiftRanker = () => {
     setPassword('');
   };
 
+  const goToAuthFromGuest = () => {
+  setIsGuest(false);
+  setUser(null);
+  setView('auth');
+  setEmail('');
+  setPassword('');
+};
+
   const selectAlbum = async (album) => {
     setSelectedAlbum(album);
     
@@ -652,13 +660,23 @@ const handleTouchEnd = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-4xl font-bold text-white">TAS Songlist</h1>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
-            >
-              <LogOut size={20} />
-              Sign Out
-            </button>
+            {isGuest ? (
+  <button
+   onClick={goToAuthFromGuest}
+    className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  >
+    Sign In
+  </button>
+) : (
+  <button
+    onClick={handleSignOut}
+    className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  >
+    <LogOut size={20} />
+    Sign Out
+  </button>
+)}
+
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -960,13 +978,23 @@ if (showShareView) {
         <List size={16} className="md:w-[18px] md:h-[18px]" />
       </button>
       
-      <button
-        onClick={handleSignOut}
-        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-        title="Sign Out"
-      >
-        <LogOut size={16} className="md:w-[18px] md:h-[18px]" />
-      </button>
+      {isGuest ? (
+  <button
+       onClick={goToAuthFromGuest}
+    className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  >
+    Sign In
+  </button>
+) : (
+  <button
+    onClick={handleSignOut}
+    className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  >
+    <LogOut size={20} />
+    Sign Out
+  </button>
+)}
+
     </div>
   </div>
   
