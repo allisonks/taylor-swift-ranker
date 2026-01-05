@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GripVertical, Share2, Download, LogOut, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2, Folder } from 'lucide-react';
+import { GripVertical, Share2, Download, LogOut, LogIn, Palette, Image as ImageIcon, Save, Plus, List, Trash2, Edit2, Check, X, RotateCcw, Settings2, Music2, Folder } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { COLOR_THEMES, getAlbumTheme } from './constants/themes';
 
@@ -207,7 +207,10 @@ const TaylorSwiftRanker = () => {
   };
 
   const loadAllRankings = async () => {
-      if (isGuest) return;
+       if (!supabase.isAuthenticated()) {
+    setAllRankings([]);
+    return;
+  }
 
     try {
       const userId = supabase.getUserId();
@@ -220,7 +223,10 @@ const TaylorSwiftRanker = () => {
   };
 
   const loadRankings = async (albumId) => {
-      if (isGuest) return;
+       if (!supabase.isAuthenticated()) {
+    setSavedRankings([]);
+    return;
+  }
 
     try {
       const data = await supabase.getRankings(albumId);
@@ -241,6 +247,7 @@ const TaylorSwiftRanker = () => {
       } else {
         await supabase.signIn(email, password);
       }
+
       setIsGuest(false);
       setUser({ email });
 
@@ -260,10 +267,11 @@ const TaylorSwiftRanker = () => {
   const handleSignOut = () => {
     supabase.signOut();
    clearSavedRankingsState(); 
-    setUser({ guest: true });
+    setUser(null);
     setIsGuest(false);
-    setView('albums');
-     loadAlbums();
+    setView('auth');
+      setEmail('');
+  setPassword('');
   };
   const clearSavedRankingsState = () => {
   setAllRankings([]);
@@ -666,8 +674,10 @@ const handleTouchEnd = () => {
   <button
    onClick={() => goToAuthFromGuest('albums')}
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  title="Sign In"
   >
-    Sign In
+    <LogIn size={20} />
+  <span className="hidden sm:inline">Sign In</span>
   </button>
 ) : (
   <button
@@ -675,7 +685,7 @@ const handleTouchEnd = () => {
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
   >
     <LogOut size={20} />
-    Sign Out
+     <span className="hidden sm:inline">Sign Out</span>
   </button>
 )}
 
@@ -984,8 +994,11 @@ if (showShareView) {
   <button
        onClick={() => goToAuthFromGuest('ranking')}
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
+  title="Sign In"
   >
-    Sign In
+    <LogIn size={20} />
+    <span className="hidden sm:inline">Sign In</span>
+
   </button>
 ) : (
   <button
@@ -993,7 +1006,7 @@ if (showShareView) {
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
   >
     <LogOut size={20} />
-    Sign Out
+     <span className="hidden sm:inline">Sign Out</span>
   </button>
 )}
 
