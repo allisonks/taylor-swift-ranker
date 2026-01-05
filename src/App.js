@@ -1433,7 +1433,7 @@ if (showShareView) {
             })}
           
           </div>
-          </div>
+          
           </div>
           {/* Hidden element for image generation */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
@@ -1472,7 +1472,7 @@ if (showShareView) {
           </div>
         </div>
       </div>
-        
+</div>
         
       );
 };
