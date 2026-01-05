@@ -166,39 +166,10 @@ const TaylorSwiftRanker = () => {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [postAuthView, setPostAuthView] = useState('albums');
+
 
   const getUserId = supabase.getUserId.bind(supabase);
-
-  const getAlbumTheme = (albumName) => {
-    const name = albumName.toLowerCase();
-    if (name.includes('midnights')) {
-      return 'midnights';
-    } else if (name.includes('evermore')) {
-      return 'evermore';
-    } else if (name.includes('folklore')) {
-      return 'folklore';
-    } else if (name.includes('lover')) {
-      return 'lover';
-    } else if (name.includes('reputation')) {
-      return 'reputation';
-    } else if (name.includes('1989')) {
-      return 'nineteen89';
-    } else if (name.includes('showgirl')) {
-      return 'showgirl';
-     } else if (name.includes('swift')) {
-      return 'debut';
-    } else if (name.includes('tortured')) {
-      return 'torturedPoets';
-    } else if (name.includes('speak')) {
-      return 'speaknow';
-    } else if (name.includes('fearless')) {
-      return 'fearless';
-    } else if (name.includes('red')) {
-      return 'red';
-    } else {
-      return 'torturedPoets';
-    }
-  };
 
   useEffect(() => {
     loadAlbums();
@@ -270,27 +241,42 @@ const TaylorSwiftRanker = () => {
       } else {
         await supabase.signIn(email, password);
       }
+      setIsGuest(false);
       setUser({ email });
+
       await loadAlbums();
+
+      if (postAuthView === 'ranking' && selectedAlbum) {
+      await loadRankings(selectedAlbum.id); // now allowed since isGuest is false
+      setView('ranking');
+    } else {
       setView('albums');
-    } catch (error) {
-      setMessage(error.message);
     }
+  } catch (error) {
+    setMessage(error.message);
+  }
   };
 
   const handleSignOut = () => {
     supabase.signOut();
-    setUser(null);
+   clearSavedRankingsState(); 
+    setUser({ guest: true });
     setIsGuest(false);
-    setView('auth');
-    setEmail('');
-    setPassword('');
+    setView('albums');
+     loadAlbums();
   };
+  const clearSavedRankingsState = () => {
+  setAllRankings([]);
+  setSavedRankings([]);
+  setCurrentRankingId(null); // important: guest rankings aren't saved
+  setShowRankingsList(false);
+};
 
-  const goToAuthFromGuest = () => {
-  setIsGuest(false);
-  setUser(null);
-  setView('auth');
+
+  const goToAuthFromGuest = (returnTo = 'albums') => {
+      clearSavedRankingsState();  
+      setPostAuthView(returnTo);    
+   setView('auth');
   setEmail('');
   setPassword('');
 };
@@ -586,6 +572,20 @@ const handleTouchEnd = () => {
     link.click();
   };
 
+  const clearUserData = () => {
+  setAllRankings([]);
+  setSavedRankings([]);
+  setCurrentRankingId(null);
+  setRankingName('');
+  setSelectedAlbum(null);
+  setSongs([]);
+  setOriginalSongs([]);
+  setAllAvailableTracks([]);
+  setVisibleTrackTitles(new Set());
+  setShowRankingsList(false);
+};
+
+
   const theme = COLOR_THEMES[currentTheme];
 
   if (view === 'auth') {
@@ -639,10 +639,12 @@ const handleTouchEnd = () => {
           <button
   type="button"
   onClick={() => {
-    setIsGuest(true);
+     supabase.signOut();
+   clearSavedRankingsState(); 
     setUser({ guest: true });
+    setIsGuest(true);
     setView('albums');
-    loadAlbums(); // albums are public
+     loadAlbums();
   }}
   className="w-full mt-4 bg-white bg-opacity-20 hover:bg-opacity-30 text-white py-3 rounded-lg font-bold transition"
 >
@@ -662,7 +664,7 @@ const handleTouchEnd = () => {
             <h1 className="text-4xl font-bold text-white">TAS Songlist</h1>
             {isGuest ? (
   <button
-   onClick={goToAuthFromGuest}
+   onClick={() => goToAuthFromGuest('albums')}
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
   >
     Sign In
@@ -980,7 +982,7 @@ if (showShareView) {
       
       {isGuest ? (
   <button
-       onClick={goToAuthFromGuest}
+       onClick={() => goToAuthFromGuest('ranking')}
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
   >
     Sign In
