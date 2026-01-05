@@ -674,8 +674,7 @@ const handleTouchEnd = () => {
   <button
    onClick={() => goToAuthFromGuest('albums')}
     className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition"
-  title="Sign In"
-  >
+    >
     <LogIn size={20} />
   <span className="hidden sm:inline">Sign In</span>
   </button>
@@ -993,7 +992,6 @@ if (showShareView) {
   <button
        onClick={() => goToAuthFromGuest('ranking')}
         className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
-  title="Sign In"
   >
     <LogIn size={20} />
     <span className="hidden sm:inline">Sign In</span>
