@@ -1382,7 +1382,7 @@ if (showShareView) {
           </div>
         )}
 
-<div className="p-4 sm:p-6">
+<div className="p-4 sm:p-6 md:p-0">
   <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl">
     <div className="space-y-2 sm:space-y-3">
 
