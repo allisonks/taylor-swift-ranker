@@ -471,6 +471,81 @@ setVisibleTrackTitles(new Set(baseSongs.map(s => s.title || s)));
       setMessage('Error deleting ranking: ' + error.message);
     }
   };
+const TrackList = ({
+  songs,
+  theme,
+  draggedItem,
+  removeSong,
+    enableDrag = true,
+  enableTouch = true,
+  handlers = {},
+}) => {
+  const {
+    onDragStart,
+    onDragEnter,
+    onDragOver,
+    onDrop,
+    onDragEnd,
+    onTouchStart,
+    onTouchMove,
+    onTouchEnd,
+  } = handlers;
+  return (
+    <div className="space-y-2 sm:space-y-3">
+      {songs.map((song, index) => {
+        const songTitle = song.title || song;
+        const trackInfo = song.track_number
+          ? `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}`
+          : null;
+
+        return (
+          <div
+            key={`${songTitle}-${index}`}
+            data-song-index={index}
+            draggable={enableDrag}
+                 onDragStart={enableDrag ? (e) => onDragStart?.(e, index) : undefined}
+            onDragEnter={enableDrag ? (e) => onDragEnter?.(e, index) : undefined}
+            onDragOver={enableDrag ? onDragOver : undefined}
+            onDrop={enableDrag ? onDrop : undefined}
+            onDragEnd={enableDrag ? onDragEnd : undefined}
+            onTouchStart={enableTouch ? (e) => onTouchStart?.(e, index) : undefined}
+            onTouchMove={enableTouch ? onTouchMove : undefined}
+            onTouchEnd={enableTouch ? onTouchEnd : undefined}
+            style={enableTouch ? { touchAction: 'none' } : undefined}
+            className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-2 sm:gap-3 transition-all hover:bg-opacity-30 select-none ${
+              enableDrag ? 'cursor-move' : ''
+            } ${draggedItem === index ? 'opacity-50 scale-95' : ''}`}
+          >
+            <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center`}>
+              {index + 1}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className={`text-sm sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>
+                {songTitle}
+              </div>
+              {trackInfo && (
+                <div className={`text-xs ${theme.textSecondary} mt-0.5 sm:mt-1 truncate sm:whitespace-normal`}>
+                  {trackInfo}
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeSong(index);
+              }}
+              className={`${theme.textSecondary} hover:text-red-400 transition`}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
   const handleDragStart = (e, index) => {
     setDraggedItem(index);
@@ -1386,57 +1461,25 @@ if (showShareView) {
 <div className="p-4 md:p-0">
 
   <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 shadow-2xl">
-    <div className="space-y-2 sm:space-y-3">
+    
 
-            {songs.map((song, index) => {
-              const songTitle = song.title || song;
-              const trackInfo = song.track_number ? 
-                `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}` : 
-                null;
-              
-              return (
-                <div
-                  key={`${songTitle}-${index}`}
-                  data-song-index={index}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onDragEnd={handleDragEnd}
-                  onTouchStart={(e) => handleTouchStart(e, index)}
-                  onTouchMove={(e) => handleTouchMove(e)}
-                  onTouchEnd={handleTouchEnd}
-                  style={{ touchAction: 'none' }}
-                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-2 sm:gap-3 cursor-move transition-all hover:bg-opacity-30 select-none ${
-                    draggedItem === index ? 'opacity-50 scale-95' : ''
-                  }`}
-                >
-                  <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center flex-shrink-0`}>
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className={`text-sm sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
-                    {trackInfo && (
-                      <div className={`text-xs ${theme.textSecondary} mt-0.5 sm:mt-1 truncate sm:whitespace-normal`}>{trackInfo}</div>
-                    )}
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeSong(index);
-                    }}
-                    className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
-                    title="Remove track"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              );
-            })}
-          
-          </div>
-          </div>
+<TrackList
+  songs={songs}
+  theme={theme}
+  draggedItem={draggedItem}
+  removeSong={removeSong}
+  handlers={{
+    onDragStart: handleDragStart,
+    onDragEnter: handleDragEnter,
+    onDragOver: handleDragOver,
+    onDrop: handleDrop,
+    onDragEnd: handleDragEnd,
+    onTouchStart: handleTouchStart,
+    onTouchMove: handleTouchMove,
+    onTouchEnd: handleTouchEnd,
+  }}
+/>
+              </div>
           </div>
           {/* Hidden element for image generation */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
