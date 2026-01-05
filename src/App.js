@@ -1434,35 +1434,40 @@ if (showShareView) {
           </div>
           </div>
           </div>
-          {/* Hidden element for image generation */}
-      <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
-        <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`} style={{ width: '800px' }}>
-          {albumImage && (
-            <div className="flex justify-center mb-6">
-              <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
+
+         </div>
+        
+        {/* Hidden element for image generation */}
+        <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+          <div ref={shareRef} className={`${theme.bgGradient} rounded-lg shadow-2xl`} style={{ width: '800px' }}>
+            <div className="p-6">
+              {albumImage && (
+                <div className="flex justify-center mb-6">
+                  <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
+                </div>
+              )}
+              <h1 className="text-4xl font-bold text-white text-center mb-2">
+                {rankingName || 'My Ranking'}
+              </h1>
+              <h2 className="text-xl text-purple-200 text-center mb-8">
+                {selectedAlbum?.name}
+              </h2>
+              
+              <div className="space-y-3">
+                {songs.map((song, index) => (
+                  <SongCard key={index} song={song} index={index} isInteractive={false} />
+                ))}
+              </div>
+              
+              <div className="mt-6 text-center text-purple-200 text-sm">
+                Made with TAS Songlist
+              </div>
             </div>
-          )}
-          <h1 className="text-4xl font-bold text-white text-center mb-2">
-            {rankingName || 'My Ranking'}
-          </h1>
-          <h2 className="text-xl text-purple-200 text-center mb-8">
-            {selectedAlbum?.name}
-          </h2>
-          
-          <div className="space-y-3">
-            {songs.map((song, index) => (
-  <SongCard key={index} song={song} index={index} isInteractive={false} />
-))}
-          </div>
-          
-          <div className="mt-6 text-center text-purple-200 text-sm">
-            Made with TAS Songlist
           </div>
         </div>
       </div>
-        </div>
-        </div>
-      );
+    </div>
+  );
 };
 
 export default TaylorSwiftRanker;
