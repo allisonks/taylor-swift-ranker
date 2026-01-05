@@ -239,74 +239,6 @@ const TaylorSwiftRanker = () => {
   const shareRef = useRef(null);
   const fileInputRef = useRef(null);
 
-// Reusable Song Card Component
-const SongCard = ({ song, index, isInteractive = false, theme }) => {
-
-  const songTitle = song.title || song;
-  const trackInfo = song.track_number ? 
-    `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}` : 
-    null;
-  
-  if (isInteractive) {
-    // Interactive version for main track list
-    return (
-      <div
-        key={`${songTitle}-${index}`}
-        data-song-index={index}
-        draggable
-        onDragStart={(e) => handleDragStart(e, index)}
-        onDragEnter={(e) => handleDragEnter(e, index)}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onDragEnd={handleDragEnd}
-        onTouchStart={(e) => handleTouchStart(e, index)}
-        onTouchMove={(e) => handleTouchMove(e)}
-        onTouchEnd={handleTouchEnd}
-        style={{ touchAction: 'none' }}
-        className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-2 sm:gap-3 cursor-move transition-all hover:bg-opacity-30 select-none ${
-          draggedItem === index ? 'opacity-50 scale-95' : ''
-        }`}
-      >
-        <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center flex-shrink-0`}>
-          {index + 1}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className={`text-sm sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
-          {trackInfo && (
-            <div className={`text-xs ${theme.textSecondary} mt-0.5 sm:mt-1 truncate sm:whitespace-normal`}>{trackInfo}</div>
-          )}
-        </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            removeSong(index);
-          }}
-          className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
-          title="Remove track"
-        >
-          <X size={16} />
-        </button>
-      </div>
-    );
-  }
-  
-  // Non-interactive version for image export
-  return (
-    <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4">
-      <div className="text-3xl font-bold text-white w-12 text-center">
-        {index + 1}
-      </div>
-      <div className="flex-1">
-        <div className="text-lg text-white">{songTitle}</div>
-        {trackInfo && (
-          <div className="text-xs text-purple-200 mt-1">{trackInfo}</div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-
   const getUserId = supabase.getUserId.bind(supabase);
 
   const getAlbumTheme = (albumName) => {
@@ -1429,44 +1361,96 @@ if (showShareView) {
   <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-2xl mb-6">
           <div className="md:px-0 -mx-3 px-3 md:mx-0">
             <div className="space-y-2 sm:space-y-3 md:px-0 px-3">
-{songs.map((song, index) => (
-  <SongCard song={song} index={index} isInteractive={true} theme={theme} />
-))}          </div>
-          </div>
-          </div>
-
-         </div>
-        
-        {/* Hidden element for image generation */}
-        <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
-          <div ref={shareRef} className={`${theme.bgGradient} rounded-lg shadow-2xl`} style={{ width: '800px' }}>
-            <div className="p-6">
-              {albumImage && (
-                <div className="flex justify-center mb-6">
-                  <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
+            {songs.map((song, index) => {
+              const songTitle = song.title || song;
+              const trackInfo = song.track_number ? 
+                `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}` : 
+                null;
+              
+              return (
+                <div
+                  key={`${songTitle}-${index}`}
+                  data-song-index={index}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragEnd={handleDragEnd}
+                  onTouchStart={(e) => handleTouchStart(e, index)}
+                  onTouchMove={(e) => handleTouchMove(e)}
+                  onTouchEnd={handleTouchEnd}
+                  style={{ touchAction: 'none' }}
+                  className={`bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 sm:p-4 flex items-center gap-2 sm:gap-3 cursor-move transition-all hover:bg-opacity-30 select-none ${
+                    draggedItem === index ? 'opacity-50 scale-95' : ''
+                  }`}
+                >
+                  <div className={`text-base sm:text-2xl font-bold ${theme.textPrimary} w-6 sm:w-12 text-center flex-shrink-0`}>
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-sm sm:text-lg ${theme.textPrimary} truncate sm:whitespace-normal`}>{songTitle}</div>
+                    {trackInfo && (
+                      <div className={`text-xs ${theme.textSecondary} mt-0.5 sm:mt-1 truncate sm:whitespace-normal`}>{trackInfo}</div>
+                    )}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSong(index);
+                    }}
+                    className={`${theme.textSecondary} hover:text-red-400 transition flex-shrink-0`}
+                    title="Remove track"
+                  >
+                    <X size={16} />
+                  </button>
                 </div>
-              )}
-              <h1 className="text-4xl font-bold text-white text-center mb-2">
-                {rankingName || 'My Ranking'}
-              </h1>
-              <h2 className="text-xl text-purple-200 text-center mb-8">
-                {selectedAlbum?.name}
-              </h2>
-              
-              {songs.map((song, index) => (
-  <SongCard key={index} song={song} index={index} isInteractive={false} theme={theme} />
-))}
-              </div>
-              
-              <div className="mt-6 text-center text-purple-200 text-sm">
-                Made with TAS Songlist
-              </div>
+              );
+            })}
+          
+          </div>
+          </div>
+          </div>
+          {/* Hidden element for image generation */}
+      <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
+        <div ref={shareRef} className={`${theme.bgGradient} rounded-lg p-8 shadow-2xl`} style={{ width: '800px' }}>
+          {albumImage && (
+            <div className="flex justify-center mb-6">
+              <img src={albumImage} alt="Album" className="w-32 h-32 rounded-lg object-cover shadow-lg" />
             </div>
+          )}
+          <h1 className="text-4xl font-bold text-white text-center mb-2">
+            {rankingName || 'My Ranking'}
+          </h1>
+          <h2 className="text-xl text-purple-200 text-center mb-8">
+            {selectedAlbum?.name}
+          </h2>
+          
+          <div className="space-y-3">
+            {songs.map((song, index) => {
+              const songTitle = song.title || song;
+              return (
+                <div
+                  key={index}
+                  className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 flex items-center gap-4"
+                >
+                  <div className="text-3xl font-bold text-white w-12 text-center">
+                    {index + 1}
+                  </div>
+                  <div className="text-lg text-white flex-1">{songTitle}</div>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="mt-6 text-center text-purple-200 text-sm">
+            Made with TAS Songlist
           </div>
         </div>
       </div>
-    </div>
-  );
+        </div>
+        </div>
+      );
 };
 
 export default TaylorSwiftRanker;
