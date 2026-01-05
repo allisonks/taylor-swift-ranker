@@ -240,7 +240,8 @@ const TaylorSwiftRanker = () => {
   const fileInputRef = useRef(null);
 
 // Reusable Song Card Component
-const SongCard = ({ song, index, isInteractive = false }) => {
+const SongCard = ({ song, index, isInteractive = false, theme }) => {
+
   const songTitle = song.title || song;
   const trackInfo = song.track_number ? 
     `Track ${song.track_number} of ${song.total_tracks} from ${song.album_edition}` : 
@@ -1429,9 +1430,8 @@ if (showShareView) {
           <div className="md:px-0 -mx-3 px-3 md:mx-0">
             <div className="space-y-2 sm:space-y-3 md:px-0 px-3">
 {songs.map((song, index) => (
-  <SongCard song={song} index={index} isInteractive={true} />
-))}
-          </div>
+  <SongCard song={song} index={index} isInteractive={true} theme={theme} />
+))}          </div>
           </div>
           </div>
 
@@ -1453,10 +1453,9 @@ if (showShareView) {
                 {selectedAlbum?.name}
               </h2>
               
-              <div className="space-y-3">
-                {songs.map((song, index) => (
-                  <SongCard key={index} song={song} index={index} isInteractive={false} />
-                ))}
+              {songs.map((song, index) => (
+  <SongCard key={index} song={song} index={index} isInteractive={false} theme={theme} />
+))}
               </div>
               
               <div className="mt-6 text-center text-purple-200 text-sm">
