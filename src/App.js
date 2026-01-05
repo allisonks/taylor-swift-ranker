@@ -991,16 +991,15 @@ if (showShareView) {
       {isGuest ? (
   <button
        onClick={() => goToAuthFromGuest('ranking')}
-        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+        className={`flex items-center justify-center bg-white gap-2 bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
   >
     <LogIn size={20} />
     <span className="hidden sm:inline">Sign In</span>
-
   </button>
 ) : (
   <button
     onClick={handleSignOut}
-        className={`flex items-center justify-center bg-white bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
+        className={`flex items-center justify-center bg-white gap-2 bg-opacity-20 hover:bg-opacity-30 ${theme.textPrimary} p-2 rounded-lg transition`}
   >
     <LogOut size={20} />
      <span className="hidden sm:inline">Sign Out</span>
