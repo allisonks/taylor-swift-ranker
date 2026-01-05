@@ -719,6 +719,12 @@ const handleTouchEnd = () => {
   }
 
   if (view === 'albums') {
+    const sortedAllRankings = [...allRankings].sort((a, b) => {
+  const aDate = new Date(a.updated_at || a.created_at || 0).getTime();
+  const bDate = new Date(b.updated_at || b.created_at || 0).getTime();
+  return bDate - aDate;
+});
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-400 via-yellow-400 through-green-400 via-blue-400 to-purple-500 p-8">
         <div className="max-w-7xl mx-auto">
@@ -734,65 +740,132 @@ const handleTouchEnd = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
-              <div className="grid gap-4">
-                {albums.map((album) => {
-                  const albumTheme = getAlbumTheme(album.name);
-                  const albumThemeColors = COLOR_THEMES[albumTheme];
-                  
-                  return (
-                    <div
-                      key={album.id}
-                      onClick={() => selectAlbum(album)}
-                      className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
-                    >
-                      <h3 className={`text-2xl font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
-                      <p className={`${albumThemeColors.textSecondary}`}>{album.artist}</p>
-                      <p className={`${albumThemeColors.textSecondary} text-sm mt-2`}>{album.songs.length} songs</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
 
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
-              {allRankings.length === 0 ? (
-                <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
-                  <p className="text-white mb-2">No saved rankings yet!</p>
-                  <p className="text-purple-100 text-sm">Create your first ranking by selecting an album</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {allRankings.map((ranking) => {
-                    const album = albums.find(a => a.id === ranking.album_id);
-                    if (!album) return null;
-                    
-                    const albumTheme = getAlbumTheme(album.name);
-                    const albumThemeColors = COLOR_THEMES[albumTheme];
-                    
-                    return (
-                      <div
-                        key={ranking.id}
-                        onClick={() => {
-                          selectAlbum(album);
-                         setTimeout(() => loadSavedRanking(ranking, album), 100);
-                        }}
-                        className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
-                      >
-                         <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>{ranking.ranking_name || 'Untitled Ranking'}</h3>
-                        <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.name}</p>
-                        <p className={`${albumThemeColors.textSecondary} text-xs mt-1`}>
-                          Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+  {/* MOBILE: compact saved rankings first */}
+  <div className="md:hidden">
+    <h2 className="text-2xl font-bold text-white mb-4">My Saved Rankings</h2>
+
+    {sortedAllRankings.length === 0 ? (
+      <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-6 text-center">
+        <p className="text-white mb-2">No saved rankings yet!</p>
+      </div>
+    ) : (
+      <div className="space-y-2">
+        {sortedAllRankings.map((ranking) => {
+          const album = albums.find(a => a.id === ranking.album_id);
+          if (!album) return null;
+
+          return (
+            <button
+              key={ranking.id}
+              onClick={() => {
+                selectAlbum(album);
+                setTimeout(() => loadSavedRanking(ranking, album), 100);
+              }}
+              className="w-full bg-white bg-opacity-10 hover:bg-opacity-20 backdrop-blur-lg rounded-xl px-4 py-3 text-left transition"
+            >
+              <div className="text-white font-semibold">
+                {ranking.ranking_name || 'Untitled Ranking'}
+              </div>
+              <div className="text-purple-100 text-xs mt-1">
+                {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    )}
+  </div>
+
+  {/* DESKTOP: Start a New List (unchanged) */}
+  <div className="hidden md:block">
+    <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
+    <div className="grid gap-4">
+      {albums.map((album) => {
+        const albumTheme = getAlbumTheme(album.name);
+        const albumThemeColors = COLOR_THEMES[albumTheme];
+
+        return (
+          <div
+            key={album.id}
+            onClick={() => selectAlbum(album)}
+            className={`${albumThemeColors.bgGradient} rounded-xl p-6 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
+          >
+            <h3 className={`text-2xl font-bold ${albumThemeColors.textPrimary}`}>{album.name}</h3>
+            <p className={`${albumThemeColors.textSecondary}`}>{album.artist}</p>
+            <p className={`${albumThemeColors.textSecondary} text-sm mt-2`}>{album.songs.length} songs</p>
           </div>
+        );
+      })}
+    </div>
+  </div>
+
+  {/* DESKTOP: Pick up where you left off */}
+  <div className="hidden md:block">
+    <h2 className="text-2xl font-bold text-white mb-4">Pick Up Where You Left Off</h2>
+
+    {sortedAllRankings.length === 0 ? (
+      <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 text-center">
+        <p className="text-white mb-2">No saved rankings yet!</p>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        {sortedAllRankings.map((ranking) => {
+          const album = albums.find(a => a.id === ranking.album_id);
+          if (!album) return null;
+
+          const albumTheme = getAlbumTheme(album.name);
+          const albumThemeColors = COLOR_THEMES[albumTheme];
+
+          return (
+            <div
+              key={ranking.id}
+              onClick={() => {
+                selectAlbum(album);
+                setTimeout(() => loadSavedRanking(ranking, album), 100);
+              }}
+              className={`${albumThemeColors.bgGradient} rounded-xl p-4 hover:scale-105 cursor-pointer transition shadow-lg h-32 flex flex-col justify-center`}
+            >
+              <h3 className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>
+                {ranking.ranking_name || 'Untitled Ranking'}
+              </h3>
+              <p className={`${albumThemeColors.textSecondary} text-sm`}>{album.name}</p>
+              <p className={`${albumThemeColors.textSecondary} text-xs mt-1`}>
+                Last updated: {new Date(ranking.updated_at || ranking.created_at).toLocaleDateString()}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+
+  {/* MOBILE: album picker after rankings */}
+  <div className="md:hidden mt-8">
+    <h2 className="text-2xl font-bold text-white mb-4">Start a New List</h2>
+    <div className="grid gap-3">
+      {albums.map((album) => {
+        const albumTheme = getAlbumTheme(album.name);
+        const albumThemeColors = COLOR_THEMES[albumTheme];
+
+        return (
+          <button
+            key={album.id}
+            onClick={() => selectAlbum(album)}
+            className={`${albumThemeColors.bgGradient} rounded-xl px-4 py-4 text-left shadow-lg transition`}
+          >
+            <div className={`text-lg font-bold ${albumThemeColors.textPrimary}`}>
+              {album.name}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+
+</div>
+
+          
         </div>
       </div>
     );
